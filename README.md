@@ -1,7 +1,7 @@
-# OS2Form Audit Module
+# OS2Web Audit Module
 
-OS2Form Audit is a Drupal module that helps track changes and perform audit on
-OS2Form events.
+OS2Web Audit is a Drupal module that helps track changes and perform audit on
+OS2Web events.
 
 ## Requirements
 -
@@ -12,7 +12,7 @@ OS2Form events.
 ## Features
 -
 - Detailed audit log entries.
-- Support for all OS2Form entity types.
+- Support for all OS2Web entity types.
 - Easily extendable for custom use case.
 
 ## Installation
@@ -28,7 +28,7 @@ extent page (`/admin/modules`).
 
 ## Configuration
 
-Navigate to `/admin/config/os2form/audit` to configure the module.
+Navigate to `/admin/config/audit` to configure the module.
 
 Some additional (brief) information on Usage, Extending/Overriding, and
 Maintainers could go here.
