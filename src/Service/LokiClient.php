@@ -40,7 +40,7 @@ class LokiClient implements LokiClientInterface {
   /**
    * Default constructor.
    *
-   * @param array $apiConfig
+   * @param array<string, string|array<string, string>> $apiConfig
    *   Configuration for the loki connection.
    */
   public function __construct(
@@ -100,7 +100,7 @@ class LokiClient implements LokiClientInterface {
   /**
    * Send a packet to the Loki ingestion endpoint.
    *
-   * @param array $packet
+   * @param array<string, mixed> $packet
    *   The packet to send.
    *
    * @throws \JsonException

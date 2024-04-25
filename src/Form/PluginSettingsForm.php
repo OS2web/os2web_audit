@@ -11,7 +11,6 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\os2web_datalookup\Form\PluginSettingsFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

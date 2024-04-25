@@ -18,7 +18,7 @@ interface AuditLoggerInterface extends PluginInspectionInterface {
    *   The timestamp of the log entry.
    * @param string $line
    *   The log message.
-   * @param array $metadata
+   * @param array<string, string> $metadata
    *   Additional metadata associated with the log entry. Defaults to an empty
    *   array.
    */

@@ -30,7 +30,7 @@ interface LokiClientInterface {
    *   Unix epoch in nanoseconds.
    * @param string $line
    *   The log line to send.
-   * @param array $metadata
+   * @param array<string, string> $metadata
    *   Extra labels/metadata to filter on.
    *
    * @see https://grafana.com/docs/loki/latest/reference/api/#ingest-logs

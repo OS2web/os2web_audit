@@ -31,7 +31,7 @@ class LocalTask extends DeriverBase implements ContainerDeriverInterface {
    *
    * @throws \ReflectionException
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition): array {
     $plugins = $this->loggerManager->getDefinitions();
     ksort($plugins);
 

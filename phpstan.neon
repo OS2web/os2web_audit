@@ -1,0 +1,28 @@
+parameters:
+  level: 6
+  paths:
+    - ./
+  excludePaths:
+    # @see https://github.com/mglaman/drupal-check/issues/261#issuecomment-1030141772/
+    - vendor
+    - '*/node_modules/*'
+  ignoreErrors:
+    # This is how drupal works....
+    - '#Unsafe usage of new static\(\).#'
+    - '#getEditableConfigNames\(\) return type has no value type specified in iterable type array#'
+    - '#buildForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#buildForm\(\) return type has no value type specified in iterable type array.#'
+    - '#validateForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#submitForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#getDerivativeDefinitions\(\) has parameter \$base_plugin_definition with no value type specified in iterable type array.#'
+    - '#getDerivativeDefinitions\(\) return type has no value type specified in iterable type array.#'
+    - '#LoggerManager::__construct\(\) has parameter \$namespaces with no value type specified in iterable type Traversable.#'
+    - '#__construct\(\) has parameter \$configuration with no value type specified in iterable type array.#'
+    - '#getConfiguration\(\) return type has no value type specified in iterable type array.#'
+    - '#setConfiguration\(\) has parameter \$configuration with no value type specified in iterable type array.#'
+    - '#defaultConfiguration\(\) return type has no value type specified in iterable type array.#'
+    - '#buildConfigurationForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#buildConfigurationForm\(\) return type has no value type specified in iterable type array.#'
+    - '#validateConfigurationForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#submitConfigurationForm\(\) has parameter \$form with no value type specified in iterable type array.#'
+    - '#getForm\(\) invoked with 2 parameters, 1 required.#'

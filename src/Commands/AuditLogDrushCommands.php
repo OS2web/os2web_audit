@@ -29,16 +29,18 @@ class AuditLogDrushCommands extends DrushCommands {
    *   Message to be logged.
    *
    * @command audit:log
-   * @usage audit:log 'This is a test message.'
-   *   Logs 'This is a test message.' to the os2web_audit logger.
+   * @usage audit:log 'This is a test message'
+   *   Logs 'This is a test message' to the os2web_audit logger.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Exception
    */
   public function logMessage(string $log_message = ''): void {
     if (empty($log_message)) {
       throw new \Exception('Log message cannot be empty.');
     }
-    $this->auditLogger->log('test', time(), $log_message, ['from' => 'drush']);
+    $this->auditLogger->info('test', time(), $log_message, FALSE, ['from' => 'drush']);
+    $this->auditLogger->error('test', time(), $log_message, TRUE, ['from' => 'drush']);
   }
 
 }

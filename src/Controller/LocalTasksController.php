@@ -44,7 +44,7 @@ class LocalTasksController extends ControllerBase {
    * @param string|null $type
    *   The type of form to retrieve. Defaults to NULL.
    *
-   * @return array
+   * @return array<string, mixed>
    *   An array containing the form definition.
    */
   public function dynamicTasks(string $type = NULL): array {

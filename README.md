@@ -4,13 +4,13 @@ OS2Web Audit is a Drupal module that helps track changes and perform audit on
 OS2Web events.
 
 ## Requirements
--
+
 - PHP 8.1 or higher
 - Drupal 8 or 9
 - Composer for managing PHP dependencies
 
 ## Features
--
+
 - Detailed audit log entries.
 - Support for all OS2Web entity types.
 - Easily extendable for custom use case.

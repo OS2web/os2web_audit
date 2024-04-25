@@ -3,6 +3,7 @@
 namespace Drupal\os2web_audit\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\os2web_audit\Form\PluginSettingsForm;
 use Drupal\os2web_audit\Form\SettingsForm;
 use Drupal\os2web_audit\Plugin\LoggerManager;
@@ -17,6 +18,7 @@ class Logger {
   public function __construct(
     private readonly LoggerManager $loggerManager,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly AccountProxyInterface $currentUser,
   ) {
   }
 
@@ -32,12 +34,12 @@ class Logger {
    * @param bool $logUser
    *   Log information about the current logged-in user (need to track who has
    *   lookup information in external services). Default: false.
-   * @param array $metadata
+   * @param array<string, string> $metadata
    *   Additional metadata for the log message. Default is an empty array.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function info(string $type, int $timestamp, string $line, bool $logUser = false, array $metadata = []): void {
+  public function info(string $type, int $timestamp, string $line, bool $logUser = FALSE, array $metadata = []): void {
     $this->log($type, $timestamp, $line, $logUser, $metadata + ['level' => 'info']);
   }
 
@@ -53,12 +55,12 @@ class Logger {
    * @param bool $logUser
    *   Log information about the current logged-in user (need to track who has
    *   lookup information in external services). Default: false.
-   * @param array $metadata
+   * @param array<string, string> $metadata
    *   Additional metadata for the log message. Default is an empty array.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function error(string $type, int $timestamp, string $line, bool $logUser = false, array $metadata = []): void {
+  public function error(string $type, int $timestamp, string $line, bool $logUser = FALSE, array $metadata = []): void {
     $this->log($type, $timestamp, $line, $logUser, $metadata + ['level' => 'error']);
   }
 
@@ -74,24 +76,23 @@ class Logger {
    * @param bool $logUser
    *   Log information about the current logged-in user (need to track who has
    *   lookup information in external services). Default: false.
-   * @param array $metadata
+   * @param array<string, string> $metadata
    *   Additional metadata for the log message. Default is an empty array.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  private function log(string $type, int $timestamp, string $line, bool $logUser = false, array $metadata = []): void {
+  private function log(string $type, int $timestamp, string $line, bool $logUser = FALSE, array $metadata = []): void {
     $config = $this->configFactory->get(SettingsForm::$configName);
     $plugin_id = $config->get('provider');
 
-    // @todo: default logger (file)
-    // @todo: Fallback logger on error.
+    // @todo default logger (file)
+    // @todo Fallback logger on error.
     $configuration = $this->configFactory->get(PluginSettingsForm::getConfigName())->get($plugin_id);
     $logger = $this->loggerManager->createInstance($plugin_id, $configuration ?? []);
 
     if ($logUser) {
       // Add user id to the log message metadata.
-      $user = \Drupal::currentUser();
-      $metadata['userId'] = $user->id();
+      $metadata['userId'] = $this->currentUser->id();
     }
 
     $logger->log($type, $timestamp, $line, $metadata);

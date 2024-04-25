@@ -2,6 +2,7 @@
 
 namespace Drupal\os2web_audit\Plugin\AuditLogger;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
@@ -15,6 +16,15 @@ use Drupal\Core\Plugin\PluginBase;
  */
 class Watchdog extends PluginBase implements AuditLoggerInterface {
 
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    private readonly LoggerChannelFactoryInterface $logger,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -24,7 +34,7 @@ class Watchdog extends PluginBase implements AuditLoggerInterface {
       $data .= " $key=\"$val\"";
     });
 
-    \Drupal::logger('os2web_audit')->info('%type: %line (%data)', [
+    $this->logger->get('os2web_audit')->info('%type: %line (%data)', [
       'type' => $type,
       'line' => $line,
       'data' => $data,

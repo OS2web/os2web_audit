@@ -81,7 +81,7 @@ class File extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
     // @todo Implement validateConfigurationForm() method.
   }
 
