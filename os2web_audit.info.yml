@@ -1,4 +1,4 @@
 name: OS2web Audit
 type: module
-description: 'OS2web Audit Module (log all events to external service)'
+description: 'OS2web Audit Module (log events in the system)'
 core_version_requirement: ^8 || ^9 || ^10
