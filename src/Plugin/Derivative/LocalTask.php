@@ -8,7 +8,7 @@ use Drupal\os2web_audit\Plugin\LoggerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides dynamic tabs based on node types.
+ * Provides dynamic tabs based on plugins available.
  */
 class LocalTask extends DeriverBase implements ContainerDeriverInterface {
 
@@ -35,12 +35,12 @@ class LocalTask extends DeriverBase implements ContainerDeriverInterface {
     $plugins = $this->loggerManager->getDefinitions();
     ksort($plugins);
 
-    // Sadly it seems that it is not possible to just invalidate the
+    // Sadly, it seems that it is not possible to just invalidate the
     // deriver/menu cache stuff. To get the local tasks menu links. So instead
-    // of clear all caches on settings save to only show selected plugins, we
+    // of clearing all caches on settings save to only show selected plugins, we
     // show em all.
     $options = array_map(function ($plugin) {
-      // Only the plugins that provides configuration options.
+      // Only the plugins that provide configuration options.
       $reflector = new \ReflectionClass($plugin['class']);
       if ($reflector->implementsInterface('Drupal\Component\Plugin\ConfigurableInterface')) {
         /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $title */

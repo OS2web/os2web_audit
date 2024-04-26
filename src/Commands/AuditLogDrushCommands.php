@@ -39,8 +39,8 @@ class AuditLogDrushCommands extends DrushCommands {
     if (empty($log_message)) {
       throw new \Exception('Log message cannot be empty.');
     }
-    $this->auditLogger->info('test', time(), $log_message, FALSE, ['from' => 'drush']);
-    $this->auditLogger->error('test', time(), $log_message, TRUE, ['from' => 'drush']);
+    $this->auditLogger->info('test', $log_message, FALSE, ['from' => 'drush']);
+    $this->auditLogger->error('test', $log_message, TRUE, ['from' => 'drush']);
   }
 
 }

@@ -30,7 +30,10 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
   /**
    * {@inheritdoc}
    *
-   * @throws \JsonException
+   * @throws \Drupal\os2web_audit\Exception\ConnectionException
+   *   If unable to connect to the Loki endpoint.
+   * @throws \Drupal\os2web_audit\Exception\AuditException
+   *   Errors in logging the packet.
    */
   public function log(string $type, int $timestamp, string $line, array $metadata = []): void {
     $client = new LokiClient([

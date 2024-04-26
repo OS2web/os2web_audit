@@ -78,14 +78,6 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('provider'),
     ];
 
-    $form['fallback'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Fallback Log provider'),
-      '#description' => $this->t('Select the logger provider you which to use, if the main provider fails'),
-      '#options' => $options,
-      '#default_value' => $config->get('fallback'),
-    ];
-
     return parent::buildForm($form, $form_state);
   }
 
@@ -97,7 +89,6 @@ class SettingsForm extends ConfigFormBase {
 
     $this->config(self::$configName)
       ->set('provider', $form_state->getValue('provider'))
-      ->set('fallback', $form_state->getValue('fallback'))
       ->save();
   }
 

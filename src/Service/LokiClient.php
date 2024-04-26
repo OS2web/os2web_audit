@@ -2,6 +2,9 @@
 
 namespace Drupal\os2web_audit\Service;
 
+use Drupal\os2web_audit\Exception\AuditException;
+use Drupal\os2web_audit\Exception\ConnectionException;
+
 /**
  * Class LokiClient.
  *
@@ -57,7 +60,10 @@ class LokiClient implements LokiClientInterface {
   /**
    * {@inheritdoc}
    *
-   * @throws \JsonException
+   * @throws \Drupal\os2web_audit\Exception\ConnectionException
+   *   If unable to connect to the Loki endpoint.
+   * @throws \Drupal\os2web_audit\Exception\AuditException
+   *   Errors in logging the packet.
    */
   public function send(string $label, int $epoch, string $line, array $metadata = []): void {
     $packet = [
@@ -103,20 +109,32 @@ class LokiClient implements LokiClientInterface {
    * @param array<string, mixed> $packet
    *   The packet to send.
    *
-   * @throws \JsonException
-   *    If unable to encode the packet to JSON.
-   * @throws \LogicException
+   * @throws \Drupal\os2web_audit\Exception\ConnectionException
    *   If unable to connect to the Loki endpoint.
+   * @throws \Drupal\os2web_audit\Exception\AuditException
+   *   Errors in logging the packet.
    */
   private function sendPacket(array $packet): void {
-    $payload = json_encode($packet, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    $url = sprintf('%s/loki/api/v1/push', $this->entrypoint);
+    try {
+      $payload = json_encode($packet, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+    catch (\JsonException $e) {
+      throw new AuditException(
+        message: 'Payload could not be encoded.',
+        previous: $e,
+        pluginName: 'Loki',
+      );
+    }
 
     if (NULL === $this->connection) {
+      $url = sprintf('%s/loki/api/v1/push', $this->entrypoint);
       $this->connection = curl_init($url);
 
       if (FALSE === $this->connection) {
-        throw new \LogicException('Unable to connect to ' . $url);
+        throw new ConnectionException(
+          message: 'Unable to connect to ' . $url,
+          pluginName: 'Loki',
+        );
       }
     }
 
@@ -145,14 +163,18 @@ class LokiClient implements LokiClientInterface {
       $result = curl_exec($this->connection);
 
       if (FALSE === $result) {
-        throw new \RuntimeException('Error sending packet to Loki');
+        throw new ConnectionException(
+          message: 'Error sending packet to Loki',
+          pluginName: 'Loki',
+        );
       }
 
       if (curl_errno($this->connection)) {
-        echo 'Curl error: ' . curl_error($this->connection);
-      }
-      else {
-        echo 'Curl result: ' . $result;
+        throw new AuditException(
+          message: curl_error($this->connection),
+          code: curl_errno($this->connection),
+          pluginName: 'Loki',
+        );
       }
     }
   }

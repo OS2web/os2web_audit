@@ -21,6 +21,11 @@ interface AuditLoggerInterface extends PluginInspectionInterface {
    * @param array<string, string> $metadata
    *   Additional metadata associated with the log entry. Defaults to an empty
    *   array.
+   *
+   * @throws \Drupal\os2web_audit\Exception\ConnectionException
+   *   If unable to connect to the Loki endpoint.
+   * @throws \Drupal\os2web_audit\Exception\AuditException
+   *   Errors in logging the packet.
    */
   public function log(string $type, int $timestamp, string $line, array $metadata = []): void;
 

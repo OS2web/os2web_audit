@@ -2,3 +2,4 @@ name: OS2web Audit
 type: module
 description: 'OS2web Audit Module (log events in the system)'
 core_version_requirement: ^8 || ^9 || ^10
+configure: os2web_audit.plugin_settings_local_tasks
