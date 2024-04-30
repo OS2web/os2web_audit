@@ -40,6 +40,13 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
       'entrypoint' => $this->configuration['entrypoint'],
       'auth' => $this->configuration['auth'],
     ]);
+
+    // Add 'identity' to metadata to be able to filter out all messages from
+    // this site in loki.
+    if (!empty($this->configuration['identity'])) {
+      $metadata['identity'] = $this->configuration['identity'];
+    }
+
     // Convert timestamp to nanoseconds.
     $client->send($type, $timestamp * 1000000000, $line, $metadata);
   }
@@ -93,6 +100,13 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
       ],
     ];
 
+    $form['identity'] = [
+      '#type'          => 'textfield',
+      '#title'         => t('Identity'),
+      '#default_value' => $this->configuration['identity'],
+      '#description'   => t('A string that will be attached to every log sendt to loki'),
+    ];
+
     $form['curl_options'] = [
       '#type' => 'textfield',
       '#title' => $this->t('cURL Options'),
@@ -136,6 +150,7 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
           'username' => $values['auth']['username'],
           'password' => $values['auth']['password'],
         ],
+        'identity' => $values['identity'],
         'curl_options' => $values['curl_options'],
       ];
       $this->setConfiguration($configuration);
