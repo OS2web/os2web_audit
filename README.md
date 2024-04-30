@@ -1,42 +1,45 @@
-# OS2Web Audit Module
+# OS2Web Audit
 
-OS2Web Audit is a Drupal module that helps track changes and perform audit on
-OS2Web events.
-
-## Requirements
-
-- PHP 8.1 or higher
-- Drupal 8 or 9
-- Composer for managing PHP dependencies
+This audit module can be used to track changes and perform audit logging on
+drupal sites.
 
 ## Features
 
-- Detailed audit log entries.
-- Support for all OS2Web entity types.
-- Easily extendable for custom use case.
+This module includes three plugins that facilitate logging information to Loki,
+files, or to the database through Drupal's watchdog logger.
+
+These logging providers are designed using Drupal's plugin APIs. Consequently,
+it opens up possibilities for creating new AuditLogger plugins within other
+modules, thus enhancing the functionality of this audit logging.
 
 ## Installation
 
-### Composer
+Enable the module and go to the modules setting page at
+`/admin/config/os2web_audit/settings/`.
 
 ### Drush
 
-### Admin UI
+The module provides a Drush command named audit:log. This command enables you
+to log a test message to the configured logger. The audit:log command accepts a
+string that represents the message to be logged.
 
-Alternatively, you can enable this module via Drupal admin UI by visiting the
-extent page (`/admin/modules`).
+The message provided, will be logged twice, once as an informational message
+and once as an error message.
 
-## Configuration
-
-Navigate to `/admin/config/audit` to configure the module.
-
-Some additional (brief) information on Usage, Extending/Overriding, and
-Maintainers could go here.
+#### Usage
+```shell
+drush audit:log 'This is a test message'
+```
 
 ## Usage
 
-Describe how to use this module after installation.
+The module exposes n simple `Logger` service which can log an `info` and`error`
+messages.
 
-## Extending and Overriding
+Inject the logger service named `os2web_audit.logger` and send messages into the
+logger as shown below:
 
-Describe how to extend or override this module's functionality.
+```php
+$msg = sprintf('Fetch personal data from service with parameter: %s', $param);
+$this->auditLogger->info('Lookup', $msg);
+```
