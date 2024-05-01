@@ -102,9 +102,9 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
 
     $form['identity'] = [
       '#type'          => 'textfield',
-      '#title'         => t('Identity'),
+      '#title'         => $this->t('Identity'),
       '#default_value' => $this->configuration['identity'],
-      '#description'   => t('A string that will be attached to every log sendt to loki'),
+      '#description'   => $this->t('A string that will be attached to every log sendt to loki'),
     ];
 
     $form['curl_options'] = [

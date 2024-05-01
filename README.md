@@ -26,7 +26,6 @@ string that represents the message to be logged.
 The message provided, will be logged twice, once as an informational message
 and once as an error message.
 
-#### Usage
 ```shell
 drush audit:log 'This is a test message'
 ```
