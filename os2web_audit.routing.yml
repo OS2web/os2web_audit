@@ -2,7 +2,7 @@ os2web_audit.plugin_settings_local_tasks:
   path: '/admin/config/os2web_audit/settings/{type}'
   defaults:
     _controller: '\Drupal\os2web_audit\Controller\LocalTasksController::dynamicTasks'
-    _title: 'OS2 Audit settings'
+    _title: 'OS2web Audit settings'
     type: ''
   requirements:
     _permission: 'administer site'

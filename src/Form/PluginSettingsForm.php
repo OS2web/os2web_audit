@@ -4,7 +4,7 @@ namespace Drupal\os2web_audit\Form;
 
 /**
  * @file
- * Abstract class for PluginSettingsForm implementation.
+ * Class for PluginSettingsForm implementation.
  */
 
 use Drupal\Component\Plugin\PluginManagerInterface;

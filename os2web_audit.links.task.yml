@@ -1,5 +1,5 @@
 os2web_audit.plugin_settings_tasks:
-  title: 'OS2 Audit settings'
+  title: 'OS2web Audit settings'
   route_name: os2web_audit.plugin_settings_local_tasks
   base_route: os2web_audit.plugin_settings_local_tasks
   deriver: Drupal\os2web_audit\Plugin\Derivative\LocalTask
