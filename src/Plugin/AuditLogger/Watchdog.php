@@ -28,7 +28,7 @@ class Watchdog extends PluginBase implements AuditLoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log(string $type, int $timestamp, string $line, array $metadata = []): void {
+  public function log(string $type, int $timestamp, string $message, array $metadata = []): void {
     $data = '';
     array_walk($metadata, function ($val, $key) use (&$data) {
       $data .= " $key=\"$val\"";
@@ -36,7 +36,7 @@ class Watchdog extends PluginBase implements AuditLoggerInterface {
 
     $this->logger->get('os2web_audit')->info('%type: %line (%data)', [
       'type' => $type,
-      'line' => $line,
+      'line' => $message,
       'data' => $data,
     ]);
   }

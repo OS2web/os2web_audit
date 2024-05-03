@@ -26,7 +26,7 @@ class File extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
   /**
    * {@inheritdoc}
    */
-  public function log(string $type, int $timestamp, string $line, array $metadata = []): void {
+  public function log(string $type, int $timestamp, string $message, array $metadata = []): void {
     // Code to write the entity to a file.
     // This is just a placeholder and won't write the data.
     file_put_contents(
@@ -34,7 +34,7 @@ class File extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
       json_encode([
         'type' => $type,
         'epoc' => $timestamp,
-        'line' => $line,
+        'line' => $message,
         'metadata' => $metadata,
       ]) . PHP_EOL,
       FILE_APPEND | LOCK_EX);

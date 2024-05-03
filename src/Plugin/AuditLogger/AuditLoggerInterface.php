@@ -16,7 +16,7 @@ interface AuditLoggerInterface extends PluginInspectionInterface {
    *   The type of event to log (auth, lookup etc.)
    * @param int $timestamp
    *   The timestamp of the log entry.
-   * @param string $line
+   * @param string $message
    *   The log message.
    * @param array<string, string> $metadata
    *   Additional metadata associated with the log entry. Defaults to an empty
@@ -27,6 +27,6 @@ interface AuditLoggerInterface extends PluginInspectionInterface {
    * @throws \Drupal\os2web_audit\Exception\AuditException
    *   Errors in logging the packet.
    */
-  public function log(string $type, int $timestamp, string $line, array $metadata = []): void;
+  public function log(string $type, int $timestamp, string $message, array $metadata = []): void;
 
 }

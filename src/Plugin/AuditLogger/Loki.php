@@ -35,7 +35,7 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
    * @throws \Drupal\os2web_audit\Exception\AuditException
    *   Errors in logging the packet.
    */
-  public function log(string $type, int $timestamp, string $line, array $metadata = []): void {
+  public function log(string $type, int $timestamp, string $message, array $metadata = []): void {
     $client = new LokiClient([
       'entrypoint' => $this->configuration['entrypoint'],
       'auth' => $this->configuration['auth'],
@@ -48,7 +48,7 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
     }
 
     // Convert timestamp to nanoseconds.
-    $client->send($type, $timestamp * 1000000000, $line, $metadata);
+    $client->send($type, $timestamp * 1000000000, $message, $metadata);
   }
 
   /**
@@ -131,7 +131,7 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
     foreach ($curlOptions as $option) {
       [$key] = explode(' =>', $option);
       $key = trim($key);
-      if (!defined($key)) {
+      if (!(str_starts_with($key, 'CURLOPT') && defined($key))) {
         $form_state->setErrorByName('curl_options', $this->t('%option is not a valid cURL option.', ['%option' => $key]));
         break;
       }

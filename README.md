@@ -17,6 +17,11 @@ modules, thus enhancing the functionality of this audit logging.
 Enable the module and go to the modules setting page at
 `/admin/config/os2web_audit/settings/`.
 
+```shell
+composer require os2web/os2web_audit
+drush pm:enable os2web_audit
+```
+
 ### Drush
 
 The module provides a Drush command named audit:log. This command enables you
