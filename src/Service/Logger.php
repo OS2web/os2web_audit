@@ -83,7 +83,7 @@ class Logger {
 
     if ($logUser) {
       // Add user id to the log message metadata.
-      $metadata['userId'] = $this->currentUser->id();
+      $metadata['userId'] = $this->currentUser->getEmail();
     }
 
     try {
