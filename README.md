@@ -32,7 +32,7 @@ drush audit:log 'This is a test message'
 
 ## Usage
 
-The module exposes n simple `Logger` service which can log an `info` and`error`
+The module exposes a simple `Logger` service which can log an `info` and `error`
 messages.
 
 Inject the logger service named `os2web_audit.logger` and send messages into the
