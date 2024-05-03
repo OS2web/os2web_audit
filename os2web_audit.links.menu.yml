@@ -1,5 +1,5 @@
 os2web_audit.admin_settings:
-  title: 'OS2 Audit settings'
+  title: 'OS2web Audit settings'
   parent: system.admin_config_system
   description: 'Settings for the OS2 Audit module'
   route_name: os2web_audit.plugin_settings_local_tasks
