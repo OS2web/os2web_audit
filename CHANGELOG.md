@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgraded to support Drupal 10.x
+
+## [0.0.1] - 2024-08-20
+
 - First version of the module
 - Added submodule to log user CUD events.
 
