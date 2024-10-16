@@ -16,7 +16,7 @@ class AuditException extends \Exception {
    */
   private string $pluginName = 'Unknown plugin';
 
-  public function __construct(string $message = "", int $code = 0, \Throwable $previous = NULL, ?string $pluginName = NULL) {
+  public function __construct(string $message = "", int $code = 0, ?\Throwable $previous = NULL, ?string $pluginName = NULL) {
     parent::__construct($message, $code, $previous);
 
     if (isset($pluginName)) {
