@@ -47,7 +47,7 @@ class LocalTasksController extends ControllerBase {
    * @return array<string, mixed>
    *   An array containing the form definition.
    */
-  public function dynamicTasks(string $type = NULL): array {
+  public function dynamicTasks(?string $type = NULL): array {
     if (empty($type)) {
       return $this->formBuilder->getForm('\Drupal\os2web_audit\Form\SettingsForm');
     }
