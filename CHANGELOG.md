@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2024-10-17
+
+- Downgraded drush requirements - to make actions work
+
 ## [0.0.2] - 2024-10-16
 
 - Upgraded to support Drupal 10.x
