@@ -6,9 +6,3 @@ services:
   os2web_audit.logger:
     class: Drupal\os2web_audit\Service\Logger
     arguments: ['@plugin.manager.os2web_audit_logger', '@config.factory', '@current_user', '@logger.factory']
-
-  os2web_audit.commands:
-    class: Drupal\os2web_audit\Commands\AuditLogDrushCommands
-    arguments: ['@os2web_audit.logger']
-    tags:
-      - { name: drush.command }
