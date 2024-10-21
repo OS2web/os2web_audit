@@ -72,6 +72,12 @@ class Loki extends PluginBase implements AuditLoggerInterface, PluginFormInterfa
   public function defaultConfiguration(): array {
     return [
       'entrypoint' => 'http://loki:3100',
+      'auth' => [
+        'username' => '',
+        'password' => '',
+      ],
+      'identity' => '',
+      'curl_options' => '',
     ];
   }
 
