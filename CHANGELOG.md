@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2024-11-19
+
 - Made Watchdog default logger
 - Updated Watchlog logger
 
@@ -29,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First version of the module
 - Added submodule to log user CUD events.
 
-[Unreleased]: https://github.com/OS2web/os2web_audit/compare/develop...HEAD
+[Unreleased]: https://github.com/OS2web/os2web_audit/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/OS2web/os2web_audit/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/OS2web/os2web_audit/compare/0.0.3...0.1.0
 [0.0.3]: https://github.com/OS2web/os2web_audit/compare/0.0.2...0.0.3
 [0.0.2]: https://github.com/OS2web/os2web_audit/compare/0.0.1...0.0.2
