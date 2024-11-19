@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * This is the settings for the module.
  */
 class SettingsForm extends ConfigFormBase {
+  public const OS2WEB_AUDIT_DEFUALT_PROVIDER = 'watchdog';
 
   /**
    * {@inheritdoc}
@@ -75,7 +76,8 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Log provider'),
       '#description' => $this->t('Select the logger provider you which to use'),
       '#options' => $options,
-      '#default_value' => $config->get('provider'),
+      // We let watchdog be the default provider.
+      '#default_value' => $config->get('provider') ?? self::OS2WEB_AUDIT_DEFUALT_PROVIDER,
     ];
 
     return parent::buildForm($form, $form_state);

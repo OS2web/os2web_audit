@@ -78,7 +78,7 @@ class Logger {
    */
   private function log(string $type, int $timestamp, string $line, bool $logUser = FALSE, array $metadata = []): void {
     $config = $this->configFactory->get(SettingsForm::$configName);
-    $plugin_id = $config->get('provider');
+    $plugin_id = $config->get('provider') ?? SettingsForm::OS2WEB_AUDIT_DEFUALT_PROVIDER;
     $configuration = $this->configFactory->get(PluginSettingsForm::getConfigName())->get($plugin_id);
 
     if ($logUser) {
