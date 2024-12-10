@@ -44,20 +44,36 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
   // webform_submission
   // file (REQUEST_URI)
   foreach ($entities as $entity) {
-      if (in_array($entity->getEntityTypeId(), OS2WEB_AUDIT_ENTITY_TYPES)) {
+      if (in_array($entity_type, OS2WEB_AUDIT_ENTITY_TYPES)) {
         $account = \Drupal::currentUser();
 
+        $data = ['API' => FALSE];
         if (os2web_audit_entity_is_api_user($account)) {
-          $t=1;
+          $data['API'] = 'true';
         }
 
         # Try to check for _cpr field for extra logging information.
-        $t=1;
+        if ($entity_type === 'webform_submission') {
+          $webform = $entity->getWebform();
+          $elements = $webform->getElementsDecoded();
+          $filterFields = preg_grep('/^(.*)cpr(.*)$/', array_keys($elements));
+          if (!empty($filterFields)) {
+            // CPR field found.
 
-        // Get current user
+            $t = $entity->id();
+            $d = $entity->getElementData($filterFields[0]);
+            $d1 = $entity->getOriginalData();
+            $d2 = $entity->getData();
+            $t=1;
+            foreach ($filterFields as $field) {
+
+            }
+          }
+        }
       }
     }
 }
+
 
 /**
  * Check if the accounts roles are in the array of API roles.
