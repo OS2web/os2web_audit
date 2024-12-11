@@ -1,9 +1,17 @@
 <?php
 
+/**
+ * @file
+ * Hooks into drupal and collect logging data.
+ */
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\webform_revisions\Entity\WebformRevisionsSubmission;
 
+/**
+ * @TODO: Should this be configurable?
+ */
 const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
   'os2forms_rest_api_user',
   'os2forms_rest_api_user_write',
@@ -13,26 +21,31 @@ const OS2WEB_AUDIT_ENTITY_USER_API = 'api';
 const OS2WEB_AUDIT_ENTITY_USER_WEB = 'web';
 
 function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
-  // Your code to handle the entity update event.
-  $t = 1;
+  $msg = sprintf('Entity (%d) of type "%s" created.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
 }
 
 /**
  * Implements hook_entity_update().
  */
 function os2web_audit_entity_entity_update(EntityInterface $entity): void {
-  // Your code to handle the entity update event.
-  $t = 1;
+  $msg = sprintf('Entity (%d) of type "%s" updated.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
 }
 
 /**
  * Implements hook_entity_delete().
  */
 function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
-  // Your code to handle the entity delete event.
-
+  $msg = sprintf('Entity (%d) of type "%s" deleted.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
 }
 
+/**
+ * Implements hook_entity_storage_load().
+ *
+ * Logs access for file entities.
+ */
 function os2web_audit_entity_entity_storage_load(array $entities, $entity_type): void {
   foreach ($entities as $entity) {
     if ($entity_type == 'file') {
@@ -94,6 +107,7 @@ function os2web_audit_entity_log(string $message): void {
   /** @var \Drupal\os2web_audit\Service\Logger $logger */
   $logger = \Drupal::service('os2web_audit.logger');
 
+  // Detect user type.
   $account = \Drupal::currentUser();
   $apiUser = FALSE;
   if (os2web_audit_entity_is_api_user($account)) {
