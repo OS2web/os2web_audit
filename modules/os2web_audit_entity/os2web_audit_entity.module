@@ -4,10 +4,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\webform_revisions\Entity\WebformRevisionsSubmission;
 
-const OS2WEB_AUDIT_ENTITY_TYPES = [
-  'file',
-];
-
 const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
   'os2forms_rest_api_user',
   'os2forms_rest_api_user_write',
@@ -34,29 +30,19 @@ function os2web_audit_entity_entity_update(EntityInterface $entity): void {
  */
 function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
   // Your code to handle the entity delete event.
-  $t = 1;
-  if ($entity->bundle() == 'webform') {
-    # Try to check for _cpr field for extra logging information.
-    $t = 1;
-  }
+
 }
 
-// Should it be more configurable in relation to types.
-// Storage used instead of load, because this hook is trigger by UI and API
 function os2web_audit_entity_entity_storage_load(array $entities, $entity_type): void {
-  // file (REQUEST_URI)
-
   foreach ($entities as $entity) {
-      if (in_array($entity_type, OS2WEB_AUDIT_ENTITY_TYPES)) {
-        $account = \Drupal::currentUser();
-
-        $data = ['API' => FALSE];
-        if (os2web_audit_entity_is_api_user($account)) {
-          $data['API'] = 'true';
-        }
-
-      }
+    if ($entity_type == 'file') {
+      /** @var \Drupal\file\Entity\File $entity */
+      $fid = $entity->id();
+      $uri = $entity->getFileUri();
+      $msg = sprintf('File (%d) accessed. Uri "%s"', $fid, $uri);
+      os2web_audit_entity_log($msg);
     }
+  }
 }
 
 /**
@@ -65,15 +51,7 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
  * @param array<WebformRevisionsSubmission> $submissions
  */
 function os2web_audit_entity_webform_post_load_data(array $submissions): void {
-
   foreach ($submissions as $submission) {
-    $account = \Drupal::currentUser();
-
-    $apiUser = FALSE;
-    if (os2web_audit_entity_is_api_user($account)) {
-      $apiUser = TRUE;
-    }
-
     # Try to check for _cpr field for extra logging information.
     $personal = '';
     $submissionData = $submission->getData();
@@ -86,7 +64,7 @@ function os2web_audit_entity_webform_post_load_data(array $submissions): void {
     }
 
     $msg = sprintf('Webform submission (%d) looked up. %sWebform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
-    os2web_audit_entity_log($msg, $submission->getWebform()->id(), ['userType' => $apiUser ? OS2WEB_AUDIT_ENTITY_USER_API : OS2WEB_AUDIT_ENTITY_USER_WEB]);
+    os2web_audit_entity_log($msg);
   }
 }
 
@@ -111,15 +89,18 @@ function os2web_audit_entity_is_api_user(AccountInterface $account): bool {
  *
  * @param string $message
  *   Message to log.
- * @param string $mail
- *   Identify users by e-mail address.
- * @param array<string, string> $metadata
- *   Optional metadata to set.
  */
-function os2web_audit_entity_log(string $message, string $mail, array $metadata = []): void {
+function os2web_audit_entity_log(string $message): void {
   /** @var \Drupal\os2web_audit\Service\Logger $logger */
   $logger = \Drupal::service('os2web_audit.logger');
 
-  $metadata['userId'] = $mail;
+  $account = \Drupal::currentUser();
+  $apiUser = FALSE;
+  if (os2web_audit_entity_is_api_user($account)) {
+    $apiUser = TRUE;
+  }
+
+  $metadata['userId'] = $account->getEmail();
+  $metadata['userType'] = $apiUser ? OS2WEB_AUDIT_ENTITY_USER_API : OS2WEB_AUDIT_ENTITY_USER_WEB;
   $logger->info('Entity', $message, FALSE, $metadata);
 }
