@@ -1,0 +1,14 @@
+diff --git a/src/WebformSubmissionStorage.php b/src/WebformSubmissionStorage.php
+index 4e14c3c..4c2d1c9 100644
+--- a/src/WebformSubmissionStorage.php
++++ b/src/WebformSubmissionStorage.php
+@@ -168,6 +168,9 @@ class WebformSubmissionStorage extends SqlContentEntityStorage implements Webfor
+     /** @var \Drupal\webform\WebformSubmissionInterface[] $webform_submissions */
+     $webform_submissions = parent::doLoadMultiple($ids);
+     $this->loadData($webform_submissions);
++
++    \Drupal::moduleHandler()->invokeAll('webform_post_load_data', [$webform_submissions]);
++
+     return $webform_submissions;
+   }
+ 

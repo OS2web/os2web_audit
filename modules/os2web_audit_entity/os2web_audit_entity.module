@@ -2,9 +2,9 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\webform_revisions\Entity\WebformRevisionsSubmission;
 
 const OS2WEB_AUDIT_ENTITY_TYPES = [
-  'webform_submission',
   'file',
 ];
 
@@ -12,6 +12,9 @@ const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
   'os2forms_rest_api_user',
   'os2forms_rest_api_user_write',
 ];
+
+const OS2WEB_AUDIT_ENTITY_USER_API = 'api';
+const OS2WEB_AUDIT_ENTITY_USER_WEB = 'web';
 
 function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
   // Your code to handle the entity update event.
@@ -41,8 +44,8 @@ function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
 // Should it be more configurable in relation to types.
 // Storage used instead of load, because this hook is trigger by UI and API
 function os2web_audit_entity_entity_storage_load(array $entities, $entity_type): void {
-  // webform_submission
   // file (REQUEST_URI)
+
   foreach ($entities as $entity) {
       if (in_array($entity_type, OS2WEB_AUDIT_ENTITY_TYPES)) {
         $account = \Drupal::currentUser();
@@ -52,26 +55,39 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
           $data['API'] = 'true';
         }
 
-        # Try to check for _cpr field for extra logging information.
-        if ($entity_type === 'webform_submission') {
-          $webform = $entity->getWebform();
-          $elements = $webform->getElementsDecoded();
-          $filterFields = preg_grep('/^(.*)cpr(.*)$/', array_keys($elements));
-          if (!empty($filterFields)) {
-            // CPR field found.
-
-            $t = $entity->id();
-            $d = $entity->getElementData($filterFields[0]);
-            $d1 = $entity->getOriginalData();
-            $d2 = $entity->getData();
-            $t=1;
-            foreach ($filterFields as $field) {
-
-            }
-          }
-        }
       }
     }
+}
+
+/**
+ * Implements hook_webform_post_load_data().
+ *
+ * @param array<WebformRevisionsSubmission> $submissions
+ */
+function os2web_audit_entity_webform_post_load_data(array $submissions): void {
+
+  foreach ($submissions as $submission) {
+    $account = \Drupal::currentUser();
+
+    $apiUser = FALSE;
+    if (os2web_audit_entity_is_api_user($account)) {
+      $apiUser = TRUE;
+    }
+
+    # Try to check for _cpr field for extra logging information.
+    $personal = '';
+    $submissionData = $submission->getData();
+    $filterFields = preg_grep('/^(.*)cpr(.*)$/', array_keys($submissionData));
+    if (!empty($filterFields)) {
+      foreach ($filterFields as $field) {
+        $cpr = $submissionData[$field];
+        $personal .= sprintf('CPR "%s".', $cpr);
+      }
+    }
+
+    $msg = sprintf('Webform submission (%d) looked up. %sWebform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+    os2web_audit_entity_log($msg, $submission->getWebform()->id(), ['userType' => $apiUser ? OS2WEB_AUDIT_ENTITY_USER_API : OS2WEB_AUDIT_ENTITY_USER_WEB]);
+  }
 }
 
 
