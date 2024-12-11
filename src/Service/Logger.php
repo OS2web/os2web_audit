@@ -92,7 +92,7 @@ class Logger {
     $request = $this->requestStack->getCurrentRequest();
     $ip_address = $request->getClientIp();
     if (!is_null($ip_address)) {
-      $line .= sprintf(' Remote ip: %s',$ip_address);
+      $line .= sprintf(' Remote ip: %s', $ip_address);
     }
 
     try {

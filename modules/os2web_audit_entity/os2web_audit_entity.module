@@ -7,7 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\webform_revisions\Entity\WebformRevisionsSubmission;
 
 /**
  * @TODO: Should this be configurable?
@@ -20,6 +19,9 @@ const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
 const OS2WEB_AUDIT_ENTITY_USER_API = 'api';
 const OS2WEB_AUDIT_ENTITY_USER_WEB = 'web';
 
+/**
+ * Implements hook_entity_insert().
+ */
 function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
   $msg = sprintf('Entity (%d) of type "%s" created.', $entity->id(), $entity->getEntityTypeId());
   os2web_audit_entity_log($msg);
@@ -60,12 +62,11 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
 
 /**
  * Implements hook_webform_post_load_data().
- *
- * @param array<WebformRevisionsSubmission> $submissions
  */
 function os2web_audit_entity_webform_post_load_data(array $submissions): void {
+  /** @var array<\Drupal\webform_revisions\Entity\WebformRevisionsSubmission> $submissions */
   foreach ($submissions as $submission) {
-    # Try to check for _cpr field for extra logging information.
+    // Try to check for _cpr field for extra logging information.
     $personal = '';
     $submissionData = $submission->getData();
     $filterFields = preg_grep('/^(.*)cpr(.*)$/', array_keys($submissionData));
@@ -80,7 +81,6 @@ function os2web_audit_entity_webform_post_load_data(array $submissions): void {
     os2web_audit_entity_log($msg);
   }
 }
-
 
 /**
  * Check if the accounts roles are in the array of API roles.
