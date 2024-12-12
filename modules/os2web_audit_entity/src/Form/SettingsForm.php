@@ -3,9 +3,9 @@
 namespace Drupal\os2web_audit_entity\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,6 +20,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
+    private EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($configFactory);
   }
@@ -30,6 +31,7 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -59,8 +61,8 @@ class SettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $items = [];
-    $roles = Role::loadMultiple();
-    foreach ($roles as $role_id => $role) {
+    $roles = $this->getRoles();
+    foreach ($roles as $role) {
       $items[$role->id()] = $role->label();
     }
 
@@ -87,6 +89,22 @@ class SettingsForm extends ConfigFormBase {
     $this->config(self::$configName)
       ->set('roles', $form_state->getValue('roles'))
       ->save();
+  }
+
+  /**
+   * Get all roles.
+   *
+   * @return array<\Drupal\Core\Entity\EntityInterface>
+   *   An array of role entities.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getRoles() {
+    // Use the role storage to load roles.
+    $roleStorage = $this->entityTypeManager->getStorage('user_role');
+
+    return $roleStorage->loadMultiple();
   }
 
 }
