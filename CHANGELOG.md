@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add new module to track user accessing webform submissions.
+- Added remote ip to all log lines.
+
 ## [0.1.1] - 2024-11-19
 
 - Made Watchdog default logger
-- Updated Watchlog logger
+- Updated watchdog logger
 
 ## [0.1.0] - 2024-10-21
 

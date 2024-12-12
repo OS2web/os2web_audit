@@ -11,6 +11,7 @@ use Drupal\os2web_audit\Exception\ConnectionException;
 use Drupal\os2web_audit\Form\PluginSettingsForm;
 use Drupal\os2web_audit\Form\SettingsForm;
 use Drupal\os2web_audit\Plugin\LoggerManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class Logger.
@@ -24,6 +25,7 @@ class Logger {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly AccountProxyInterface $currentUser,
     private readonly LoggerChannelFactoryInterface $watchdog,
+    private readonly RequestStack $requestStack,
   ) {
   }
 
@@ -84,6 +86,13 @@ class Logger {
     if ($logUser) {
       // Add user id to the log message metadata.
       $metadata['userId'] = $this->currentUser->getEmail();
+    }
+
+    // Log request IP for information more information.
+    $request = $this->requestStack->getCurrentRequest();
+    $ip_address = $request->getClientIp();
+    if (!is_null($ip_address)) {
+      $line .= sprintf(' Remote ip: %s', $ip_address);
     }
 
     try {

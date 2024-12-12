@@ -5,4 +5,4 @@ services:
 
   os2web_audit.logger:
     class: Drupal\os2web_audit\Service\Logger
-    arguments: ['@plugin.manager.os2web_audit_logger', '@config.factory', '@current_user', '@logger.factory']
+    arguments: ['@plugin.manager.os2web_audit_logger', '@config.factory', '@current_user', '@logger.factory', '@request_stack']
