@@ -57,12 +57,24 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
   foreach ($submissions as $submission) {
     // Try to check for _cpr field for extra logging information.
     $personal = '';
+    $filterFields = [];
+
+    // Detect field of type that contains "cpr" in name or where field name
+    // contains "cpr".
+    /** @var \Drupal\webform_revisions\Entity\WebformRevisions $webform */
+    $webform = $submission->getWebform();
+    $elements = $webform->getElementsDecoded();
+    foreach ($elements as $fieldName => $element) {
+      if (str_contains(strtolower($element['#type']), 'cpr') || str_contains(strtolower($fieldName), 'cpr')) {
+        $filterFields[] = $fieldName;
+      }
+    }
+
     $submissionData = $submission->getData();
-    $filterFields = preg_grep('/^(.*)cpr(.*)$/', array_keys($submissionData));
     if (!empty($filterFields)) {
       foreach ($filterFields as $field) {
         $cpr = $submissionData[$field];
-        $personal .= sprintf('CPR "%s".', $cpr);
+        $personal .= sprintf(' CPR "%s" in field "%s".', $cpr ?: 'null', $field);
       }
     }
 
@@ -71,16 +83,15 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     if (preg_match('~(.*)/print/pdf/(.*)|(.*)\d.*/attachment(.*)~', $request->getPathInfo())) {
       // We know that a webform submission has been loaded and this is a print
       // pdf path. This indicates that this is an attachment download action.
-      $msg = sprintf('Webform submission (%d) downloaded as attachment. %s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+      $msg = sprintf('Webform submission (%d) downloaded as attachment.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
       os2web_audit_entity_log($msg);
 
       // Exit to prevent double log entry.
       return;
     }
 
-    $msg = sprintf('Webform submission (%d) looked up. %s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+    $msg = sprintf('Webform submission (%d) looked up.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
     os2web_audit_entity_log($msg);
-
   }
 }
 
