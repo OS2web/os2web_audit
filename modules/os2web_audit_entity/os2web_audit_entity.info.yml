@@ -1,0 +1,6 @@
+name: "OS2web Audit logging entity access"
+description: "Logs CRUD events for entities"
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - os2web_audit:os2web_audit

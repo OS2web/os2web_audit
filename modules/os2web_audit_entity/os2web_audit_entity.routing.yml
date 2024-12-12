@@ -1,0 +1,7 @@
+os2web_audit_entity.settings:
+  path: '/admin/config/os2web_audit/entity'
+  defaults:
+    _form: '\Drupal\os2web_audit_entity\Form\SettingsForm'
+    _title: 'OS2web Audit entity settings'
+  requirements:
+    _permission: 'administer site'

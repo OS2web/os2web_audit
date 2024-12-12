@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Hooks into drupal and collect logging data.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\os2web_audit_entity\Form\SettingsForm;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
+  $msg = sprintf('Entity (%d) of type "%s" created.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function os2web_audit_entity_entity_update(EntityInterface $entity): void {
+  $msg = sprintf('Entity (%d) of type "%s" updated.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
+  $msg = sprintf('Entity (%d) of type "%s" deleted.', $entity->id(), $entity->getEntityTypeId());
+  os2web_audit_entity_log($msg);
+}
+
+/**
+ * Implements hook_entity_storage_load().
+ *
+ * Logs access for file entities.
+ */
+function os2web_audit_entity_entity_storage_load(mixed $entities, string $entity_type): void {
+  foreach ($entities as $entity) {
+    if ($entity_type == 'file') {
+      /** @var \Drupal\file\Entity\File $entity */
+      $fid = $entity->id();
+      $uri = $entity->getFileUri();
+      $msg = sprintf('File (%d) accessed. Uri "%s"', $fid, $uri);
+      os2web_audit_entity_log($msg);
+    }
+  }
+}
+
+/**
+ * Implements hook_webform_post_load_data().
+ */
+function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
+  foreach ($submissions as $submission) {
+    // Try to check for _cpr field for extra logging information.
+    $personal = '';
+    $filterFields = [];
+
+    // Detect field of type that contains "cpr" in name or where field name
+    // contains "cpr".
+    $webform = $submission->getWebform();
+    $elements = $webform->getElementsDecoded();
+    foreach ($elements as $fieldName => $element) {
+      if (str_contains(strtolower($element['#type']), 'cpr') || str_contains(strtolower($fieldName), 'cpr')) {
+        $filterFields[] = $fieldName;
+      }
+    }
+
+    $submissionData = $submission->getData();
+    if (!empty($filterFields)) {
+      foreach ($filterFields as $field) {
+        $cpr = $submissionData[$field];
+        $personal .= sprintf(' CPR "%s" in field "%s".', $cpr ?: 'null', $field);
+      }
+    }
+
+    // Attachments download.
+    $request = \Drupal::request();
+    if (preg_match('~(.*)/print/pdf/(.*)|(.*)\d.*/attachment(.*)~', $request->getPathInfo())) {
+      // We know that a webform submission has been loaded and this is a print
+      // pdf path. This indicates that this is an attachment download action.
+      $msg = sprintf('Webform submission (%d) downloaded as attachment.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+      os2web_audit_entity_log($msg);
+
+      // Exit to prevent double log entry.
+      return;
+    }
+
+    $msg = sprintf('Webform submission (%d) looked up.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+    os2web_audit_entity_log($msg);
+  }
+}
+
+/**
+ * Check if the accounts roles are in the array of API roles.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   User account.
+ *
+ * @return bool
+ *   If roles found TRUE else FALSE.
+ */
+function os2web_audit_entity_is_api_user(AccountInterface $account): bool {
+  $roles = $account->getRoles();
+
+  $config = \Drupal::config(SettingsForm::$configName);
+  $selectedRoles = $config->get('roles');
+
+  return !empty(array_intersect($roles, array_keys(array_filter($selectedRoles))));
+}
+
+/**
+ * Simple logger wrapper.
+ *
+ * @param string $message
+ *   Message to log.
+ */
+function os2web_audit_entity_log(string $message): void {
+  /** @var \Drupal\os2web_audit\Service\Logger $logger */
+  $logger = \Drupal::service('os2web_audit.logger');
+
+  // Detect user type.
+  $account = \Drupal::currentUser();
+  $metadata['userId'] = $account->getEmail();
+  $metadata['userType'] = os2web_audit_entity_is_api_user($account) ? 'api' : 'web';
+  $logger->info('Entity', $message, FALSE, $metadata);
+}
