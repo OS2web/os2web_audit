@@ -16,8 +16,8 @@ const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
   'os2forms_rest_api_user_write',
 ];
 
-const OS2WEB_AUDIT_ENTITY_USER_API = 'api';
-const OS2WEB_AUDIT_ENTITY_USER_WEB = 'web';
+define("OS2WEB_AUDIT_ENTITY_USER_API", 'api');
+define("OS2WEB_AUDIT_ENTITY_USER_WEB", 'web');
 
 /**
  * Implements hook_entity_insert().
@@ -63,8 +63,8 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
 /**
  * Implements hook_webform_post_load_data().
  */
-function os2web_audit_entity_webform_post_load_data(array $submissions): void {
-  /** @var array<\Drupal\webform_revisions\Entity\WebformRevisionsSubmission> $submissions */
+function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
+
   foreach ($submissions as $submission) {
     // Try to check for _cpr field for extra logging information.
     $personal = '';
