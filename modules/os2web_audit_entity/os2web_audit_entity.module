@@ -7,17 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-
-/**
- * @TODO: Should this be configurable?
- */
-const OS2WEB_AUDIT_ENTITY_API_USER_ROLES = [
-  'os2forms_rest_api_user',
-  'os2forms_rest_api_user_write',
-];
-
-define("OS2WEB_AUDIT_ENTITY_USER_API", 'api');
-define("OS2WEB_AUDIT_ENTITY_USER_WEB", 'web');
+use Drupal\os2web_audit_entity\Form\SettingsForm;
 
 /**
  * Implements hook_entity_insert().
@@ -48,7 +38,7 @@ function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
  *
  * Logs access for file entities.
  */
-function os2web_audit_entity_entity_storage_load(array $entities, $entity_type): void {
+function os2web_audit_entity_entity_storage_load(mixed $entities, $entity_type): void {
   foreach ($entities as $entity) {
     if ($entity_type == 'file') {
       /** @var \Drupal\file\Entity\File $entity */
@@ -64,7 +54,6 @@ function os2web_audit_entity_entity_storage_load(array $entities, $entity_type):
  * Implements hook_webform_post_load_data().
  */
 function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
-
   foreach ($submissions as $submission) {
     // Try to check for _cpr field for extra logging information.
     $personal = '';
@@ -77,8 +66,21 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
       }
     }
 
-    $msg = sprintf('Webform submission (%d) looked up. %sWebform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+    // Attachments - requestStack
+    $request = \Drupal::request();
+    if (preg_match('~(.*)/print/pdf/(.*)~', $request->getPathInfo())) {
+      // We know that a webform submission has been loaded and this is a print
+      // pdf path. This indicates that this is an attachment download action.
+      $msg = sprintf('Webform submission (%d) downloaded as attachment. %s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+      os2web_audit_entity_log($msg);
+
+      // Exit to prevent double log entry.
+      return;
+    }
+
+    $msg = sprintf('Webform submission (%d) looked up. %s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
     os2web_audit_entity_log($msg);
+
   }
 }
 
@@ -94,7 +96,10 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
 function os2web_audit_entity_is_api_user(AccountInterface $account): bool {
   $roles = $account->getRoles();
 
-  return !empty(array_intersect($roles, OS2WEB_AUDIT_ENTITY_API_USER_ROLES));
+  $config = \Drupal::config(SettingsForm::$configName);
+  $selectedRoles = $config->get('roles');
+
+  return !empty(array_intersect($roles, array_keys(array_filter($selectedRoles))));
 }
 
 /**
@@ -115,6 +120,6 @@ function os2web_audit_entity_log(string $message): void {
   }
 
   $metadata['userId'] = $account->getEmail();
-  $metadata['userType'] = $apiUser ? OS2WEB_AUDIT_ENTITY_USER_API : OS2WEB_AUDIT_ENTITY_USER_WEB;
+  $metadata['userType'] = $apiUser ? 'api' : 'web';
   $logger->info('Entity', $message, FALSE, $metadata);
 }

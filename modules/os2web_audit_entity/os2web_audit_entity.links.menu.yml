@@ -1,0 +1,5 @@
+os2web_audit_entity.admin_settings:
+  title: 'OS2web Audit entity settings'
+  parent: system.admin_config_system
+  description: 'Settings for the OS2 Audit entity module'
+  route_name: os2web_audit_entity.settings
