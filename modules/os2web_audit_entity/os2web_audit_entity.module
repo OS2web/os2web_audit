@@ -61,7 +61,6 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
 
     // Detect field of type that contains "cpr" in name or where field name
     // contains "cpr".
-    /** @var \Drupal\webform_revisions\Entity\WebformRevisions $webform */
     $webform = $submission->getWebform();
     $elements = $webform->getElementsDecoded();
     foreach ($elements as $fieldName => $element) {
@@ -125,12 +124,7 @@ function os2web_audit_entity_log(string $message): void {
 
   // Detect user type.
   $account = \Drupal::currentUser();
-  $apiUser = FALSE;
-  if (os2web_audit_entity_is_api_user($account)) {
-    $apiUser = TRUE;
-  }
-
   $metadata['userId'] = $account->getEmail();
-  $metadata['userType'] = $apiUser ? 'api' : 'web';
+  $metadata['userType'] = os2web_audit_entity_is_api_user($account) ? 'api' : 'web';
   $logger->info('Entity', $message, FALSE, $metadata);
 }

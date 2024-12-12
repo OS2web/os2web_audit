@@ -70,8 +70,8 @@ class SettingsForm extends ConfigFormBase {
 
     $form['roles'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Choose an Option'),
-      '#description' => $this->t('Please select an option from the dropdown menu.'),
+      '#title' => $this->t('Select API access roles'),
+      '#description' => $this->t('The selected roles will be use to determine who is accessing entities through the API.'),
       '#options' => $items,
       '#default_value' => $config->get('roles') ?? [],
       '#required' => TRUE,

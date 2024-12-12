@@ -1,5 +1,5 @@
 name: "OS2web Audit logging entity access"
-description: "Logs CUD events for entities"
+description: "Logs CRUD events for entities"
 type: module
 core_version_requirement: ^8 || ^9 || ^10
 dependencies:
