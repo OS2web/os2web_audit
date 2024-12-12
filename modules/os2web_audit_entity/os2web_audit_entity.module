@@ -68,7 +68,7 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
 
     // Attachments - requestStack
     $request = \Drupal::request();
-    if (preg_match('~(.*)/print/pdf/(.*)~', $request->getPathInfo())) {
+    if (preg_match('~(.*)/print/pdf/(.*)|(.*)\d.*/attachment(.*)~', $request->getPathInfo())) {
       // We know that a webform submission has been loaded and this is a print
       // pdf path. This indicates that this is an attachment download action.
       $msg = sprintf('Webform submission (%d) downloaded as attachment. %s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
