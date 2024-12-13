@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added queue logic to enhance performance.
 - Add new module to track user accessing webform submissions.
 - Added remote ip to all log lines.
 
