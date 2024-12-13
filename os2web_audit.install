@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install file for OS2Web Audit module.
+ */
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Implements hook_update_N().
+ *
+ * Ensure queue config is installed.
+ */
+function os2web_audit_update_103001(): void {
+  $config_id = 'advancedqueue.advancedqueue_queue.os2web_audit';
+  $config_path = \Drupal::service('extension.list.module')->getPath('os2web_audit') . '/config/install/' . $config_id . '.yml';
+  $data = Yaml::parseFile($config_path);
+  \Drupal::configFactory()->getEditable($config_id)->setData($data)->save(TRUE);
+}
