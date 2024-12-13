@@ -12,6 +12,10 @@ These logging providers are designed using Drupal's plugin APIs. Consequently,
 it opens up possibilities for creating new AuditLogger plugins within other
 modules, thus enhancing the functionality of this audit logging.
 
+For performance purposes we use a queue system. This avoids hindering
+performance more than necessary as the actual logging is done async. Furthermore,
+this allows for retries in case any audit log plugins should fail.
+
 ## Installation
 
 Enable the module and go to the modules setting page at
@@ -47,3 +51,24 @@ logger as shown below:
 $msg = sprintf('Fetch personal data from service with parameter: %s', $param);
 $this->auditLogger->info('Lookup', $msg);
 ```
+
+### Queue
+
+The actual logging is handled by jobs in an [Advanced
+Queue](https://www.drupal.org/project/advancedqueue) queue.
+
+The queue, OS2Web audit (`os2web_audit`), must be
+processed by a server `cron` job, e.g.
+
+```sh
+drush advancedqueue:queue:process os2web_audit
+```
+
+List the queue (and all other queues) with
+
+```sh
+drush advancedqueue:queue:list
+```
+
+or go to `/admin/config/system/queues/jobs/os2web_audit` for a
+graphical overview of jobs in the queue.
