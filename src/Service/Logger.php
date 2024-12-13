@@ -123,6 +123,19 @@ class Logger {
 
   /**
    * Logs a message using a plugin-specific logger.
+   *
+   * @param string $type
+   *   The type of event to log (auth, lookup etc.)
+   * @param int $timestamp
+   *   The timestamp for the log message.
+   * @param string $line
+   *   The log message.
+   * @param string $plugin_id
+   *   The logging plugin id.
+   * @param array<string, string> $metadata
+   *   Additional metadata for the log message. Default is an empty array.
+   *
+   * @throws \Exception.
    */
   public function log(string $type, int $timestamp, string $line, string $plugin_id, array $metadata = []): void {
 
