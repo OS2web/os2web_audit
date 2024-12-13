@@ -100,25 +100,27 @@ class Logger {
     $config = $this->configFactory->get(SettingsForm::$configName);
     $plugin_id = $config->get('provider') ?? SettingsForm::OS2WEB_AUDIT_DEFUALT_PROVIDER;
 
-    $queueStorage = $this->entityTypeManager->getStorage('advancedqueue_queue');
-    /** @var \Drupal\advancedqueue\Entity\Queue $queue */
-    $queue = $queueStorage->load(self::OS2WEB_AUDIT_QUEUE_ID);
-    $job = Job::create(LogMessages::class, [
+    $payload = [
       'type' => $type,
       'timestamp' => $timestamp,
       'line' => $line,
       'plugin_id' => $plugin_id,
       'metadata' => $metadata,
-    ]);
-
-    $queue->enqueueJob($job);
-
-    $logger_context = [
-      'job_id' => $job->getId(),
-      'operation' => 'log message queued',
     ];
 
-    $this->watchdog->get(self::OS2WEB_AUDIT_LOGGER_CHANNEL)->notice('Added audit logging message to queue for processing.', $logger_context);
+    try {
+      $queueStorage = $this->entityTypeManager->getStorage('advancedqueue_queue');
+      /** @var \Drupal\advancedqueue\Entity\Queue $queue */
+      $queue = $queueStorage->load(self::OS2WEB_AUDIT_QUEUE_ID);
+
+      $job = Job::create(LogMessages::class, $payload);
+
+      $queue->enqueueJob($job);
+    }
+    catch (\Exception $exception) {
+      $this->watchdog->get(self::OS2WEB_AUDIT_LOGGER_CHANNEL)->error(sprintf('Failed creating job: %s', $exception->getMessage()), $payload);
+    }
+
   }
 
   /**
@@ -135,22 +137,17 @@ class Logger {
    * @param array<string, string> $metadata
    *   Additional metadata for the log message. Default is an empty array.
    *
-   * @throws \Exception.
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\os2web_audit\Exception\ConnectionException
+   * @throws \Drupal\os2web_audit\Exception\AuditException
    */
   public function log(string $type, int $timestamp, string $line, string $plugin_id, array $metadata = []): void {
 
     $configuration = $this->configFactory->get(PluginSettingsForm::getConfigName())->get($plugin_id);
 
-    try {
-      /** @var \Drupal\os2web_audit\Plugin\AuditLogger\AuditLoggerInterface $logger */
-      $logger = $this->loggerManager->createInstance($plugin_id, $configuration ?? []);
-      $logger->log($type, $timestamp, $line, $metadata);
-    }
-    catch (\Exception $e) {
-      // Log (not audit log) an error and throw error in order to retry.
-      $this->watchdog->get(self::OS2WEB_AUDIT_LOGGER_CHANNEL)->error($e->getMessage());
-      throw $e;
-    }
+    /** @var \Drupal\os2web_audit\Plugin\AuditLogger\AuditLoggerInterface $logger */
+    $logger = $this->loggerManager->createInstance($plugin_id, $configuration ?? []);
+    $logger->log($type, $timestamp, $line, $metadata);
   }
 
 }

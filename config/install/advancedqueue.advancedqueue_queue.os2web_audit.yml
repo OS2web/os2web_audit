@@ -5,6 +5,6 @@ label: os2web_audit
 backend: database
 backend_configuration:
   lease_time: 300
-processor: cron
+processor: daemon
 processing_time: 90
 locked: false
