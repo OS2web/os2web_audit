@@ -110,8 +110,12 @@ class Logger {
 
     try {
       $queueStorage = $this->entityTypeManager->getStorage('advancedqueue_queue');
-      /** @var \Drupal\advancedqueue\Entity\Queue $queue */
+      /** @var \Drupal\advancedqueue\Entity\Queue|null $queue */
       $queue = $queueStorage->load(self::OS2WEB_AUDIT_QUEUE_ID);
+
+      if (NULL === $queue) {
+        throw new \Exception(sprintf('Queue (%s) not found.', self::OS2WEB_AUDIT_QUEUE_ID));
+      }
 
       $job = Job::create(LogMessages::class, $payload);
 
