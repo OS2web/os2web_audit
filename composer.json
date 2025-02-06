@@ -19,7 +19,7 @@
         "ext-curl": "*",
         "php": "^8.1",
         "drupal/advancedqueue": "^1.2",
-        "drush/drush": "^11.5|^12.5"
+        "drush/drush": "^13"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
