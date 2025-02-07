@@ -15,7 +15,7 @@ use Drush\Exceptions\CommandFailedException;
 class Commands extends DrushCommands {
 
   /**
-   * Os2webAuditDrushCommands constructor.
+   * Commands constructor.
    *
    * @param \Drupal\os2web_audit\Service\Logger $auditLogger
    *   Audit logger service.
