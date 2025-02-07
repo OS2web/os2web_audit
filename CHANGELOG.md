@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update from drush 11-12 to 13 and update command
 - Add linting and code analysis to readme
 - Add markdown linting
+
 ## [0.1.6] - 2024-12-16
 
 - Fixed missing queue error during installation.
