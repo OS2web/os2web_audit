@@ -15,7 +15,7 @@ use Drupal\user\UserInterface;
 function os2web_audit_user_user_insert(EntityInterface $entity): void {
   /** @var \Drupal\user\Entity\User $entity */
   $msg = sprintf('User created with rolles: %s', implode(', ', $entity->getRoles()));
-  os2web_audit_user_log($msg, $entity->getEmail());
+  os2web_audit_user_log($msg, $entity->getEmail() ?? $entity->getAccountName());
 }
 
 /**
@@ -24,7 +24,7 @@ function os2web_audit_user_user_insert(EntityInterface $entity): void {
 function os2web_audit_user_user_update(EntityInterface $entity): void {
   /** @var \Drupal\user\Entity\User $entity */
   $msg = sprintf('User updated with rolles: %s', implode(', ', $entity->getRoles()));
-  os2web_audit_user_log($msg, $entity->getEmail());
+  os2web_audit_user_log($msg, $entity->getEmail() ?? $entity->getAccountName());
 }
 
 /**
@@ -32,21 +32,21 @@ function os2web_audit_user_user_update(EntityInterface $entity): void {
  */
 function os2web_audit_user_user_delete(EntityInterface $entity): void {
   /** @var \Drupal\user\Entity\User $entity */
-  os2web_audit_user_log('User deleted', $entity->getEmail());
+  os2web_audit_user_log('User deleted', $entity->getEmail() ?? $entity->getAccountName());
 }
 
 /**
  * Implements hook_user_login().
  */
 function os2web_audit_user_user_login(UserInterface $account): void {
-  os2web_audit_user_log('User logged in', $account->getEmail());
+  os2web_audit_user_log('User logged in', $account->getEmail() ?? $account->getAccountName());
 }
 
 /**
  * Implements hook_user_logout().
  */
 function os2web_audit_user_user_logout(AccountInterface $account): void {
-  os2web_audit_user_log('User logged out', $account->getEmail());
+  os2web_audit_user_log('User logged out', $account->getEmail() ?? $account->getAccountName());
 }
 
 /**
