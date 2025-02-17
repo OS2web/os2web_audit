@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Drush\Attributes\Argument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drush\Exceptions\CommandFailedException;
+
 /**
  * Simple command to send log message into audit log.
  */
@@ -40,7 +41,7 @@ class Commands extends DrushCommands {
    * Log a test message to the os2web_audit logger.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
-   * @throws CommandFailedException
+   * @throws \Drush\Attributes\CommandFailedException
    */
   #[Command(name: 'audit:log')]
   #[Argument(name: 'log_message', description: "Message to be logged.")]

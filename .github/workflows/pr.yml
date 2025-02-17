@@ -80,7 +80,7 @@ jobs:
           composer install --no-interaction --no-progress
       - name: PHPCS
         run: |
-          composer coding-standards-check/phpcs
+          docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
 
   php-code-analysis:
     name: PHP code analysis
@@ -120,4 +120,3 @@ jobs:
 
       - name: Markdown lint
         run: docker run --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint --ignore vendor '**/*.md'
-
