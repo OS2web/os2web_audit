@@ -80,7 +80,7 @@ jobs:
           composer install --no-interaction --no-progress
       - name: PHPCS
         run: |
-          composer coding-standards-check/phpcs
+          docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
 
   php-code-analysis:
     name: PHP code analysis
@@ -111,27 +111,12 @@ jobs:
         run: |
           ./scripts/code-analysis
 
-  markdownlint:
+  markdown-lint:
+    name: Markdown lint
     runs-on: ubuntu-latest
-    name: markdownlint
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Cache yarn packages
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Yarn install
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-      - run: yarn install
-      - name: markdownlint
-        run: yarn coding-standards-check/markdownlint
+        uses: actions/checkout@v4
+
+      - name: Markdown lint
+        run: docker run --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint --ignore vendor '**/*.md'
