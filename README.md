@@ -101,6 +101,6 @@ phpstan is used to perform static analysis of the code. Run the following script
 #### Markdown files
 
 ```shell
-docker run --rm --volume "$PWD:/md" peterdavehello/markdownlint markdownlint '**/*.md' --fix
-docker run --rm --volume "$PWD:/md" peterdavehello/markdownlint markdownlint '**/*.md'
+docker run --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md' --fix
+docker run --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md'
 ```
