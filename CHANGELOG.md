@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Update from drush 11-12 to 13 and update command
+- Add Drush 13 compatibility
 - Add linting and code analysis to readme
 - Add markdown linting
 
