@@ -72,3 +72,36 @@ drush advancedqueue:queue:list
 
 or go to `/admin/config/system/queues/jobs/os2web_audit` for a
 graphical overview of jobs in the queue.
+
+### Coding standards
+
+#### PHP files (PHP_CodeSniffer)
+
+Check PHP coding standards
+
+```shell
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
+```
+
+Apply coding standard changes
+
+```shell
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-apply
+```
+
+### Code analysis
+
+phpstan is used to perform static analysis of the code. Run the following script:
+
+```sh
+./scripts/code-analysis
+```
+
+#### Markdown files
+
+```shell
+docker run --interactive --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md' --fix
+docker run --interactive --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md'
+```
