@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-02-17
+
+- Used account name as fallback in user logging
+- Add Drush 13 compatibility
+- Add linting and code analysis to readme
+- Add markdown linting
+
 ## [0.1.6] - 2024-12-16
 
 - Fixed missing queue error during installation.
@@ -52,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First version of the module
 - Added submodule to log user CUD events.
 
-[Unreleased]: https://github.com/OS2web/os2web_audit/compare/0.1.6...HEAD
+[Unreleased]: https://github.com/OS2web/os2web_audit/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/OS2web/os2web_audit/compare/0.1.6...0.2.0
 [0.1.6]: https://github.com/OS2web/os2web_audit/compare/0.1.5...0.1.6
 [0.1.5]: https://github.com/OS2web/os2web_audit/compare/0.1.4...0.1.5
 [0.1.4]: https://github.com/OS2web/os2web_audit/compare/0.1.3...0.1.4
