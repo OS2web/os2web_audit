@@ -41,7 +41,7 @@ class Commands extends DrushCommands {
    * Log a test message to the os2web_audit logger.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
-   * @throws \Drush\Attributes\CommandFailedException
+   * @throws \Exception
    */
   #[Command(name: 'audit:log')]
   #[Argument(name: 'log_message', description: "Message to be logged.")]
