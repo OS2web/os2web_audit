@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-02-25
+
+- Removed types from class constants.
+
 ## [0.2.0] - 2025-02-17
 
 - Used account name as fallback in user logging
@@ -59,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First version of the module
 - Added submodule to log user CUD events.
 
-[Unreleased]: https://github.com/OS2web/os2web_audit/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/OS2web/os2web_audit/compare/0.2.1...HEAD
+[0.2.1]: https://github.com/OS2web/os2web_audit/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/OS2web/os2web_audit/compare/0.1.6...0.2.0
 [0.1.6]: https://github.com/OS2web/os2web_audit/compare/0.1.5...0.1.6
 [0.1.5]: https://github.com/OS2web/os2web_audit/compare/0.1.4...0.1.5
