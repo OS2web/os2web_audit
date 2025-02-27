@@ -62,7 +62,7 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     // Detect field of type that contains "cpr" in name or where field name
     // contains "cpr".
     $webform = $submission->getWebform();
-    $elements = $webform->getElementsDecoded();
+    $elements = $webform->getElementsDecodedAndFlattened();
     foreach ($elements as $fieldName => $element) {
       if (str_contains(strtolower($element['#type']), 'cpr') || str_contains(strtolower($fieldName), 'cpr')) {
         $filterFields[] = $fieldName;
