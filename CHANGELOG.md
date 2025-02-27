@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated logging messages.
+- Checked nested elements when checking for CPR values.
+
 ## [0.2.1] - 2025-02-25
 
 - Removed types from class constants.
