@@ -13,7 +13,7 @@ use Drupal\os2web_audit_entity\Form\SettingsForm;
  * Implements hook_entity_insert().
  */
 function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
-  $msg = sprintf('Entity (%d) of type "%s" created.', $entity->id(), $entity->getEntityTypeId());
+  $msg = sprintf('Entity (%s) of type "%s" created.', $entity->id(), $entity->getEntityTypeId());
   os2web_audit_entity_log($msg);
 }
 
@@ -21,7 +21,7 @@ function os2web_audit_entity_entity_insert(EntityInterface $entity): void {
  * Implements hook_entity_update().
  */
 function os2web_audit_entity_entity_update(EntityInterface $entity): void {
-  $msg = sprintf('Entity (%d) of type "%s" updated.', $entity->id(), $entity->getEntityTypeId());
+  $msg = sprintf('Entity (%s) of type "%s" updated.', $entity->id(), $entity->getEntityTypeId());
   os2web_audit_entity_log($msg);
 }
 
@@ -29,7 +29,7 @@ function os2web_audit_entity_entity_update(EntityInterface $entity): void {
  * Implements hook_entity_delete().
  */
 function os2web_audit_entity_entity_delete(EntityInterface $entity): void {
-  $msg = sprintf('Entity (%d) of type "%s" deleted.', $entity->id(), $entity->getEntityTypeId());
+  $msg = sprintf('Entity (%s) of type "%s" deleted.', $entity->id(), $entity->getEntityTypeId());
   os2web_audit_entity_log($msg);
 }
 
@@ -44,7 +44,7 @@ function os2web_audit_entity_entity_storage_load(mixed $entities, string $entity
       /** @var \Drupal\file\Entity\File $entity */
       $fid = $entity->id();
       $uri = $entity->getFileUri();
-      $msg = sprintf('File (%d) accessed. Uri "%s"', $fid, $uri);
+      $msg = sprintf('File (%s) accessed. Uri "%s"', $fid, $uri);
       os2web_audit_entity_log($msg);
     }
   }
@@ -82,14 +82,14 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     if (preg_match('~(.*)/print/pdf/(.*)|(.*)\d.*/attachment(.*)~', $request->getPathInfo())) {
       // We know that a webform submission has been loaded and this is a print
       // pdf path. This indicates that this is an attachment download action.
-      $msg = sprintf('Webform submission (%d) downloaded as attachment.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+      $msg = sprintf('Webform submission (%s) downloaded as attachment.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
       os2web_audit_entity_log($msg);
 
       // Exit to prevent double log entry.
       return;
     }
 
-    $msg = sprintf('Webform submission (%d) looked up.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
+    $msg = sprintf('Webform submission (%s) looked up.%s Webform id "%s".', $submission->id(), $personal, $submission->getWebform()->id());
     os2web_audit_entity_log($msg);
   }
 }
