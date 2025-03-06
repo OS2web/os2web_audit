@@ -64,7 +64,10 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     $webform = $submission->getWebform();
     $elements = $webform->getElementsDecodedAndFlattened();
     foreach ($elements as $fieldName => $element) {
-      if (str_contains(strtolower($element['#type']), 'cpr') || str_contains(strtolower($fieldName), 'cpr')) {
+      if (
+        str_contains(strtolower($element['#type']), 'cpr')
+        || str_contains(strtolower($element['#type']), 'os2forms_person_lookup')
+        || str_contains(strtolower($fieldName), 'cpr')) {
         $filterFields[] = $fieldName;
       }
     }
@@ -72,7 +75,26 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     $submissionData = $submission->getData();
     if (!empty($filterFields)) {
       foreach ($filterFields as $field) {
-        $cpr = $submissionData[$field];
+        // Not all fields are present within submission data, i.e. markup.
+        if (!isset($submissionData[$field])) {
+          continue;
+        }
+
+        $fieldValue = $submissionData[$field];
+
+        // Handles os2forms_person_lookup (cpr & name validation) element.
+        if (is_array($fieldValue)) {
+          // Example:
+          // [
+          // 'cpr_number' => 1234567890,
+          // 'name' => Eksempel Eksempelsen,
+          // ].
+          $cpr = $fieldValue['cpr_number'] ?? NULL;
+        }
+        else {
+          $cpr = $fieldValue;
+        }
+
         $personal .= sprintf(' CPR "%s" in field "%s".', $cpr ?: 'null', $field);
       }
     }
