@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handled webform elements not present in submission data
   i.e. markup elements.
+- Handled `os2forms_person_lookup` element.
 
 ## [1.0.0] - 2025-02-28
 
