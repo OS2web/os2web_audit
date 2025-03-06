@@ -72,7 +72,7 @@ function os2web_audit_entity_webform_post_load_data(mixed $submissions): void {
     $submissionData = $submission->getData();
     if (!empty($filterFields)) {
       foreach ($filterFields as $field) {
-        // Not all fields/elements are present within submission data, i.e. markup.
+        // Not all fields are present within submission data, i.e. markup.
         if (!isset($submissionData[$field])) {
           continue;
         }
