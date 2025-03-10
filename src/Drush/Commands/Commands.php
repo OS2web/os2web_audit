@@ -2,13 +2,15 @@
 
 namespace Drupal\os2web_audit\Drush\Commands;
 
-use Drush\Attributes\Command;
+use Drupal\Core\Database\Connection;
+use Drupal\advancedqueue\Job;
 use Drupal\os2web_audit\Service\Logger;
-use Drush\Commands\DrushCommands;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Drush\Attributes\Argument;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drush\Attributes\Command;
+use Drush\Commands\DrushCommands;
 use Drush\Exceptions\CommandFailedException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple command to send log message into audit log.
@@ -24,6 +26,7 @@ class Commands extends DrushCommands {
   public function __construct(
     #[Autowire(service: 'os2web_audit.logger')]
     protected readonly Logger $auditLogger,
+    protected Connection $connection,
   ) {
     parent::__construct();
   }
@@ -34,6 +37,7 @@ class Commands extends DrushCommands {
   public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('os2web_audit.logger'),
+      $container->get('database'),
     );
   }
 
@@ -52,6 +56,27 @@ class Commands extends DrushCommands {
 
     $this->auditLogger->info('test', $log_message, FALSE, ['from' => 'drush']);
     $this->auditLogger->error('test', $log_message, TRUE, ['from' => 'drush']);
+  }
+
+  /**
+  * Retries all failed jobs in the os2web_audit queue.
+  */
+  #[Command(name: 'audit:retry-jobs')]
+  public function retryJobs(): void {
+
+    try {
+      $this->connection->update('advancedqueue')
+        ->fields(['state' => Job::STATE_QUEUED])
+        ->condition('queue_id', 'os2web_audit')
+        ->condition('state', Job::STATE_FAILURE)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->io()->error($e->getMessage());
+    }
+
+    $this->io()->success('Successfully retried all failed jobs.');
+
   }
 
 }
