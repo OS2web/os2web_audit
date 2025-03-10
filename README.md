@@ -47,17 +47,17 @@ The module also comes with methods for retrying failed jobs in the
 `os2web_audit` queue.
 
 ```shell
-drush audit:retry-job SOME_JOB_ID
+drush audit:retry-failed-jobs
 ```
 
-The above method comes with a `--ignore-state` option that can be added to
-force retry on any state rather than just failed.
+Per default, it simply retries all failed jobs however it comes with
+the following options:
 
 ```shell
-drush audit:retry-failed-jobs LIMIT
+ --id[=ID]       Retry a specific job by ID (e.g. 1245.)
+ --ignore-state  Retry job regardless of state. This only effects the --id option.
+ --limit[=LIMIT] Retry (up to) a limited number of jobs. Minimum: 1, Maximum: 5000, Default 1000.
 ```
-
-Here, limit is the number of jobs to retry.
 
 ## Usage
 

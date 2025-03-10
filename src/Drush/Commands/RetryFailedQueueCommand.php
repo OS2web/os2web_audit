@@ -4,7 +4,6 @@ namespace Drupal\os2web_audit\Drush\Commands;
 
 use Drupal\Core\Database\Connection;
 use Drupal\advancedqueue\Job;
-use Drush\Attributes\Argument;
 use Drush\Attributes\Command;
 use Drush\Attributes\Option;
 use Drush\Commands\DrushCommands;
@@ -40,12 +39,60 @@ class RetryFailedQueueCommand extends DrushCommands {
   }
 
   /**
-   * Retries failed jobs in the os2web_audit queue.
+   * Retries all failed jobs in the os2web_audit queue.
    */
   #[Command(name: 'audit:retry-failed-jobs')]
-  #[Argument(name: 'limit', description: "The number of jobs to retry. Minimum: 1, Maximum: 5000")]
-  public function retryJobs(int $limit = 1000): void {
+  #[Option(name: 'id', description: "Retry a specific job by ID (e.g. 1245.)")]
+  #[Option(name: 'ignore-state', description: 'Retries job regardless of state. This only effects the --id option.')]
+  #[Option(name: 'limit', description: "Retry (up to) a limited number of jobs. Minimum: 1, Maximum: 5000, Default 1000.")]
+  public function retryFailedJobs($options = ['id' => NULL, 'ignore-state' => FALSE, 'limit' => NULL]): void {
 
+    if (TRUE === $options['id']) {
+      $this->writeln('Please specify a job ID, e.g. --id=1245.');
+      return;
+    }
+    elseif (is_string($options['id'])) {
+      $this->retryJob((int) $options['id'], $options['ignore-state']);
+      return;
+    }
+
+    if (TRUE === $options['limit']) {
+      // We use the default 1000.
+      $this->retryJobs(1000);
+      return;
+    }
+    elseif (is_string($options['limit'])) {
+      $this->retryJobs((int) $options['limit']);
+      return;
+    }
+
+    $this->retryAllFailedJobs();
+
+  }
+
+  /**
+   * Retries all failed jobs in os2web_audit.
+   */
+  private function retryAllFailedJobs(): void {
+    try {
+      $this->connection->update('advancedqueue')
+        ->fields(['state' => Job::STATE_QUEUED])
+        ->condition('queue_id', 'os2web_audit')
+        ->condition('state', Job::STATE_FAILURE)
+        ->execute();
+
+      $this->output()->writeln('Successfully retried all failed jobs.');
+    }
+    catch (\Exception $e) {
+      $this->output()->writeln($e->getMessage());
+    }
+
+  }
+
+  /**
+   * Retries jobs in the os2web_audit queue.
+   */
+  private function retryJobs(int $limit): void {
     if ($limit < 1 || $limit > 5000) {
       $this->output()->writeln('Limit should be an integer between 1 and 5000.');
       return;
@@ -77,10 +124,7 @@ class RetryFailedQueueCommand extends DrushCommands {
   /**
    * Retries failed job in the os2web_audit queue.
    */
-  #[Command(name: 'audit:retry-job')]
-  #[Argument(name: 'id', description: "The job ID to retry.")]
-  #[Option(name: 'ignore-state', description: 'Retries job regardless of state.')]
-  public function retryJob(int $id, bool $ignoreState): void {
+  private function retryJob(int $id, bool $ignoreState): void {
 
     try {
       // Check that job exists by fetching its state.
