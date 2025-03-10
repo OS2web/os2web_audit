@@ -51,15 +51,15 @@ class RetryFailedQueueCommand extends DrushCommands {
       return;
     }
 
-    $ids = $this->connection->select(self::ADVANCEDQUEUE_TABLE, 'a')
-      ->fields('a', ['job_id'])
-      ->condition('queue_id', self::OS2WEB_AUDIT_QUEUE_ID)
-      ->condition('state', Job::STATE_FAILURE)
-      ->range(0, $limit)
-      ->execute()
-      ->fetchCol();
-
     try {
+      $ids = $this->connection->select(self::ADVANCEDQUEUE_TABLE, 'a')
+        ->fields('a', ['job_id'])
+        ->condition('queue_id', self::OS2WEB_AUDIT_QUEUE_ID)
+        ->condition('state', Job::STATE_FAILURE)
+        ->range(0, $limit)
+        ->execute()
+        ->fetchCol();
+
       $this->connection->update(self::ADVANCEDQUEUE_TABLE)
         ->fields(['state' => Job::STATE_QUEUED])
         ->condition('queue_id', self::OS2WEB_AUDIT_QUEUE_ID)
@@ -75,7 +75,7 @@ class RetryFailedQueueCommand extends DrushCommands {
   }
 
   /**
-   * Retries failed job.
+   * Retries failed job in the os2web_audit queue.
    */
   #[Command(name: 'audit:retry-job')]
   #[Argument(name: 'id', description: "The job ID to retry.")]

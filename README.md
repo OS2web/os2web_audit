@@ -43,12 +43,21 @@ drush audit:log 'This is a test message'
 
 ### Retry jobs
 
-The module also comes with method for retrying failed jobs. This will retry,
-all failed jobs in the `os2web_audit` queue.
+The module also comes with methods for retrying failed jobs in the
+`os2web_audit` queue.
 
 ```shell
-drush audit:retry-jobs
+drush audit:retry-job SOME_JOB_ID
 ```
+
+The above method comes with a `--ignore-state` option that can be added to
+force retry on any state rather than just failed.
+
+```shell
+drush audit:retry-failed-jobs LIMIT
+```
+
+Here, limit is the number of jobs to retry.
 
 ## Usage
 
