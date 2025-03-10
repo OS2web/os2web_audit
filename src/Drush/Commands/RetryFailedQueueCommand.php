@@ -40,6 +40,9 @@ class RetryFailedQueueCommand extends DrushCommands {
 
   /**
    * Retries all failed jobs in the os2web_audit queue.
+   *
+   * @param array<string, mixed> $options
+   *   The options array.
    */
   #[Command(name: 'audit:retry-failed-jobs')]
   #[Option(name: 'id', description: "Retry a specific job by ID (e.g. 1245.)")]
