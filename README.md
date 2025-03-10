@@ -26,7 +26,9 @@ composer require os2web/os2web_audit
 drush pm:enable os2web_audit
 ```
 
-### Drush
+## Drush
+
+### Test audit log
 
 The module provides a Drush command named audit:log. This command enables you
 to log a test message to the configured logger. The audit:log command accepts a
@@ -37,6 +39,15 @@ and once as an error message.
 
 ```shell
 drush audit:log 'This is a test message'
+```
+
+### Retry jobs
+
+The module also comes with method for retrying failed jobs. This will retry,
+all failed jobs in the `os2web_audit` queue.
+
+```shell
+drush audit:retry-jobs
 ```
 
 ## Usage
