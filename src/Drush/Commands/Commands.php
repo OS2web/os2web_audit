@@ -22,6 +22,8 @@ class Commands extends DrushCommands {
    *
    * @param \Drupal\os2web_audit\Service\Logger $auditLogger
    *   Audit logger service.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
    */
   public function __construct(
     #[Autowire(service: 'os2web_audit.logger')]
@@ -70,13 +72,12 @@ class Commands extends DrushCommands {
         ->condition('queue_id', 'os2web_audit')
         ->condition('state', Job::STATE_FAILURE)
         ->execute();
+
+      $this->output()->writeln('Successfully retried all failed jobs.');
     }
     catch (\Exception $e) {
-      $this->io()->error($e->getMessage());
+      $this->output()->writeln($e->getMessage());
     }
-
-    $this->io()->success('Successfully retried all failed jobs.');
-
   }
 
 }
