@@ -180,13 +180,13 @@ class LokiClient implements LokiClientInterface {
    *   The error code.
    * @param ?\Throwable $previous
    *   The previous throwable.
-   * @param ?string $pluginName
+   * @param string $pluginName
    *   The plugin name.
    *
    * @return \Drupal\os2web_audit\Exception\AuditException
    *   The created exception.
    */
-  private function auditException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, ?string $pluginName = 'Loki'): AuditException {
+  private function auditException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, string $pluginName = 'Loki'): AuditException {
     return new AuditException(
       message: $message,
       code: $code,
@@ -204,13 +204,13 @@ class LokiClient implements LokiClientInterface {
    *   The error code.
    * @param ?\Throwable $previous
    *   The previous throwable.
-   * @param ?string $pluginName
+   * @param string $pluginName
    *   The plugin name.
    *
    * @return \Drupal\os2web_audit\Exception\ConnectionException
    *   The created exception.
    */
-  private function connectionException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, ?string $pluginName = 'Loki'): ConnectionException {
+  private function connectionException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, string $pluginName = 'Loki'): ConnectionException {
     return new ConnectionException(
       message: $message,
       code: $code,
