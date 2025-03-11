@@ -162,7 +162,7 @@ class LokiClient implements LokiClientInterface {
       curl_setopt_array($this->connection, $curlOptions);
       $result = curl_exec($this->connection);
 
-      if (FALSE === $result) {
+      if (FALSE === $result || 200 !== curl_getinfo($this->connection, CURLINFO_HTTP_CODE)) {
         throw new ConnectionException(
           message: 'Error sending packet to Loki',
           pluginName: 'Loki',
