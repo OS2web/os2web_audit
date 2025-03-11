@@ -2,18 +2,18 @@
 
 namespace Drupal\os2web_audit\Drush\Commands;
 
-use Drush\Attributes\Command;
 use Drupal\os2web_audit\Service\Logger;
-use Drush\Commands\DrushCommands;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Drush\Attributes\Argument;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drush\Attributes\Command;
+use Drush\Commands\DrushCommands;
 use Drush\Exceptions\CommandFailedException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple command to send log message into audit log.
  */
-class Commands extends DrushCommands {
+class LogMessageCommand extends DrushCommands {
 
   /**
    * Commands constructor.

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added command for retrying jobs.
+- Checked http codes when sending packets to loki.
+
 ## [1.0.1] - 2025-03-06
 
 - Handled webform elements not present in submission data

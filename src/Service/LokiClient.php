@@ -119,11 +119,7 @@ class LokiClient implements LokiClientInterface {
       $payload = json_encode($packet, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
     catch (\JsonException $e) {
-      throw new AuditException(
-        message: 'Payload could not be encoded.',
-        previous: $e,
-        pluginName: 'Loki',
-      );
+      throw $this->auditException('Payload could not be encoded.', 0, $e);
     }
 
     if (NULL === $this->connection) {
@@ -131,10 +127,7 @@ class LokiClient implements LokiClientInterface {
       $this->connection = curl_init($url);
 
       if (FALSE === $this->connection) {
-        throw new ConnectionException(
-          message: 'Unable to connect to ' . $url,
-          pluginName: 'Loki',
-        );
+        throw $this->connectionException('Unable to initialize curl connection to ' . $url);
       }
     }
 
@@ -163,20 +156,67 @@ class LokiClient implements LokiClientInterface {
       $result = curl_exec($this->connection);
 
       if (FALSE === $result) {
-        throw new ConnectionException(
-          message: 'Error sending packet to Loki',
-          pluginName: 'Loki',
-        );
+        throw $this->connectionException('Error sending packet to Loki');
       }
 
       if (curl_errno($this->connection)) {
-        throw new AuditException(
-          message: curl_error($this->connection),
-          code: curl_errno($this->connection),
-          pluginName: 'Loki',
-        );
+        throw $this->auditException(curl_error($this->connection), curl_errno($this->connection));
+      }
+
+      $code = curl_getinfo($this->connection, CURLINFO_HTTP_CODE);
+
+      if (!in_array($code, [200, 204], TRUE)) {
+        throw $this->auditException('Error sending packet to Loki', $code);
       }
     }
+  }
+
+  /**
+   * Creates an audit exception.
+   *
+   * @param string $message
+   *   The log message.
+   * @param int $code
+   *   The error code.
+   * @param ?\Throwable $previous
+   *   The previous throwable.
+   * @param string $pluginName
+   *   The plugin name.
+   *
+   * @return \Drupal\os2web_audit\Exception\AuditException
+   *   The created exception.
+   */
+  private function auditException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, string $pluginName = 'Loki'): AuditException {
+    return new AuditException(
+      message: $message,
+      code: $code,
+      previous: $previous,
+      pluginName: $pluginName,
+    );
+  }
+
+  /**
+   * Creates a connection exception.
+   *
+   * @param string $message
+   *   The log message.
+   * @param int $code
+   *   The error code.
+   * @param ?\Throwable $previous
+   *   The previous throwable.
+   * @param string $pluginName
+   *   The plugin name.
+   *
+   * @return \Drupal\os2web_audit\Exception\ConnectionException
+   *   The created exception.
+   */
+  private function connectionException(string $message = '', int $code = 0, ?\Throwable $previous = NULL, string $pluginName = 'Loki'): ConnectionException {
+    return new ConnectionException(
+      message: $message,
+      code: $code,
+      previous: $previous,
+      pluginName: $pluginName,
+    );
   }
 
 }
