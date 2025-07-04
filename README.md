@@ -2,7 +2,7 @@
 
 This audit module can be used to track changes and perform audit logging on
 drupal sites.
-why
+
 ## Features
 
 This module includes three plugins that facilitate logging information to Loki,
