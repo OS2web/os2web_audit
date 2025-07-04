@@ -1,7 +1,7 @@
 name: "OS2web Audit"
 description: 'OS2web Audit Module (log events in the system)'
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^8 || ^9 || ^10 || ^11
 dependencies:
   - drupal:advancedqueue
 configure: os2web_audit.plugin_settings_local_tasks
