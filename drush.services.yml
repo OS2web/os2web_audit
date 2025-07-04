@@ -1,6 +1,0 @@
-services:
-  os2web_audit.commands:
-    class: Drupal\os2web_audit\Commands\AuditLogDrushCommands
-    arguments: ['@os2web_audit.logger']
-    tags:
-      - { name: drush.command }

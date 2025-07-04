@@ -26,7 +26,9 @@ composer require os2web/os2web_audit
 drush pm:enable os2web_audit
 ```
 
-### Drush
+## Drush
+
+### Test audit log
 
 The module provides a Drush command named audit:log. This command enables you
 to log a test message to the configured logger. The audit:log command accepts a
@@ -37,6 +39,24 @@ and once as an error message.
 
 ```shell
 drush audit:log 'This is a test message'
+```
+
+### Retry jobs
+
+The module also comes with methods for retrying failed jobs in the
+`os2web_audit` queue.
+
+```shell
+drush audit:retry-failed-jobs
+```
+
+Per default, it simply retries all failed jobs however it comes with
+the following options:
+
+```shell
+ --id[=ID]       Retry a specific job by ID (e.g. 1245.)
+ --ignore-state  Retry job regardless of state. This only effects the --id option.
+ --limit[=LIMIT] Retry (up to) a limited number of jobs. Minimum: 1, Maximum: 5000, Default 1000.
 ```
 
 ## Usage
@@ -72,3 +92,36 @@ drush advancedqueue:queue:list
 
 or go to `/admin/config/system/queues/jobs/os2web_audit` for a
 graphical overview of jobs in the queue.
+
+### Coding standards
+
+#### PHP files (PHP_CodeSniffer)
+
+Check PHP coding standards
+
+```shell
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-check
+```
+
+Apply coding standard changes
+
+```shell
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer install
+docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-apply
+```
+
+### Code analysis
+
+phpstan is used to perform static analysis of the code. Run the following script:
+
+```sh
+./scripts/code-analysis
+```
+
+#### Markdown files
+
+```shell
+docker run --interactive --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md' --fix
+docker run --interactive --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md'
+```

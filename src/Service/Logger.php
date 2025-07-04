@@ -20,8 +20,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class Logger {
 
-  const string OS2WEB_AUDIT_QUEUE_ID = 'os2web_audit';
-  const string OS2WEB_AUDIT_LOGGER_CHANNEL = 'os2web_audit_info';
+  public const OS2WEB_AUDIT_QUEUE_ID = 'os2web_audit';
+  public const OS2WEB_AUDIT_LOGGER_CHANNEL = 'os2web_audit_info';
 
   public function __construct(
     private readonly LoggerManager $loggerManager,
