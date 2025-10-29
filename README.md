@@ -72,7 +72,12 @@ $msg = sprintf('Fetch personal data from service with parameter: %s', $param);
 $this->auditLogger->info('Lookup', $msg);
 ```
 
-### Queue
+### Implementations
+
+See [implementations](/docs/IMPLEMENTATIONS.md) for a list of modules that have
+audit logging integrated.
+
+## Queue
 
 The actual logging is handled by jobs in an [Advanced
 Queue](https://www.drupal.org/project/advancedqueue) queue.
@@ -93,9 +98,22 @@ drush advancedqueue:queue:list
 or go to `/admin/config/system/queues/jobs/os2web_audit` for a
 graphical overview of jobs in the queue.
 
-### Coding standards
+### Purge successful jobs
 
-#### PHP files (PHP_CodeSniffer)
+It is possible to configure the queue to purge jobs based on
+ the number of jobs or the number of days since processing.
+
+Go to `admin/config/system/queues/manage/os2web_audit` to configure this.
+
+Below is an example of purging successful jobs after 7 days.
+
+![queue purge config](/docs/queue_purge_config.png)
+
+Remember to export this to ensure it is not overridden upon config import.
+
+## Coding standards
+
+### PHP files (PHP_CodeSniffer)
 
 Check PHP coding standards
 
@@ -111,7 +129,7 @@ docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest comp
 docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.3-fpm:latest composer coding-standards-apply
 ```
 
-### Code analysis
+## Code analysis
 
 phpstan is used to perform static analysis of the code. Run the following script:
 
@@ -119,7 +137,7 @@ phpstan is used to perform static analysis of the code. Run the following script
 ./scripts/code-analysis
 ```
 
-#### Markdown files
+### Markdown files
 
 ```shell
 docker run --interactive --rm --volume "$PWD:/md" itkdev/markdownlint markdownlint '**/*.md' --fix
