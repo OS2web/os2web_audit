@@ -3,6 +3,7 @@
 namespace Drupal\os2web_audit\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\os2web_audit\Plugin\LoggerManager;
@@ -21,9 +22,10 @@ class SettingsForm extends ConfigFormBase {
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
-    private readonly LoggerManager $loggerManager,
+    TypedConfigManagerInterface $typedConfigManager,
+    private readonly LoggerManager $loggerManager
   ) {
-    parent::__construct($configFactory);
+    parent::__construct($configFactory, $typedConfigManager);
   }
 
   /**
@@ -32,6 +34,7 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('plugin.manager.os2web_audit_logger')
     );
   }
