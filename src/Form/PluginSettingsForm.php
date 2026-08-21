@@ -9,6 +9,7 @@ namespace Drupal\os2web_audit\Form;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,9 +31,10 @@ class PluginSettingsForm extends ConfigFormBase implements PluginSettingsFormInt
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
     PluginManagerInterface $manager,
   ) {
-    parent::__construct($config_factory);
+    parent::__construct($config_factory, $typedConfigManager);
     $this->manager = $manager;
   }
 
@@ -42,6 +44,7 @@ class PluginSettingsForm extends ConfigFormBase implements PluginSettingsFormInt
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('plugin.manager.os2web_audit_logger')
     );
   }
