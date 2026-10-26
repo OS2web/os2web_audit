@@ -102,7 +102,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First version of the module
 - Added submodule to log user CUD events.
 
-[Unreleased]: https://github.com/OS2web/os2web_audit/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/OS2web/os2web_audit/compare/1.3.2...HEAD
+[1.3.2]: https://github.com/OS2web/os2web_audit/compare/1.3.1...1.3.2
+[1.3.1]: https://github.com/OS2web/os2web_audit/compare/1.3.0...1.3.1
+[1.3.0]: https://github.com/OS2web/os2web_audit/compare/1.2.0...1.3.0
+[1.2.0]: https://github.com/OS2web/os2web_audit/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/OS2web/os2web_audit/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/OS2web/os2web_audit/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/OS2web/os2web_audit/compare/0.2.2...1.0.0
