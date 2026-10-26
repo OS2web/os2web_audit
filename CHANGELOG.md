@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Purging queue jobs
   - Modules implementing audit log
 
+## [1.3.1] - 2026-08-21
+
+- Fix Drupal 11 compatibility - settings forms
+
+## [1.3.0] - 2026-08-19
+
+- Fix Drupal 11 compatibility - settings forms
+
 ## [1.2.0] - 2025-07-03
 
 - Added drupal 11 compatibility
