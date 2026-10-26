@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2026-10-26
+
+- Add missing `core_version_requirement: ^11` to submodules.
 - Added documentation on
   - Purging queue jobs
   - Modules implementing audit log

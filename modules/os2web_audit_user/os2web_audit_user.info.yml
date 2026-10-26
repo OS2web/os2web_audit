@@ -1,6 +1,6 @@
 name: "OS2web Audit logging users"
 description: "Logs CUD events for users"
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^8 || ^9 || ^10 || ^11
 dependencies:
   - os2web_audit:os2web_audit
