@@ -23,7 +23,7 @@ class SettingsForm extends ConfigFormBase {
   public function __construct(
     ConfigFactoryInterface $configFactory,
     TypedConfigManagerInterface $typedConfigManager,
-    private readonly LoggerManager $loggerManager
+    private readonly LoggerManager $loggerManager,
   ) {
     parent::__construct($configFactory, $typedConfigManager);
   }
